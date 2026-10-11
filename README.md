@@ -30,7 +30,7 @@
 
 `orderNo` 取自客户请求，`tenantId` 取自平台验证的身份，再组装为 Provider 的 JSON 正文。右侧可预览最终请求；预览中的 `sample-tenant` 是样例占位，不是真实调用身份。
 
-HTTP  
+HTTP(支持动态url、服务发现ip)  
 ![API 工作区：入参映射与最终请求HTTP](docs/images/api-request-mapping.jpg)
 DUBBO  
 ![API 工作区：入参映射与最终请求DUBBO](docs/images/api-request-dubbo.png)
