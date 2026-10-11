@@ -26,6 +26,19 @@
 
 ![API 工作区：字段、目标映射与发布基线](docs/images/api-workspace.jpg)
 
+#### 入参映射：把请求字段与可信身份交给业务服务
+
+`orderNo` 取自客户请求，`tenantId` 取自平台验证的身份，再组装为 Provider 的 JSON 正文。右侧可预览最终请求；预览中的 `sample-tenant` 是样例占位，不是真实调用身份。
+
+![API 工作区：入参映射与最终请求预览](docs/images/api-request-mapping.jpg)
+
+#### 出参映射：定义客户最终收到的数据
+
+在“响应处理”中选择直接使用业务对象或从 Response 提取数据，并声明公开字段、类型和样例。下图使用订单示例的直接返回方式，展示四个公开字段和业务响应示例。
+
+![API 工作区：出参处理、公开字段与响应示例](docs/images/api-response-mapping.jpg)
+
+
 <details>
 <summary><strong>开发者门户：查看契约、调用示例与在线调试</strong></summary>
 

@@ -18,9 +18,13 @@
 | [workbench.jpg](workbench.jpg) | 登录后工作台，已有演示调用 |
 | [api-list.jpg](api-list.jpg) | “API列表”，示例已发布且门户展示开启 |
 | [api-workspace.jpg](api-workspace.jpg) | 示例行“编辑”，配置页顶部 |
+| [api-request-mapping.jpg](api-request-mapping.jpg) | 工作区“调用目标与映射”，展示 BODY 两条规则并展开“最终请求预览” |
+| [api-response-mapping.jpg](api-response-mapping.jpg) | 工作区“响应处理”，直接返回模式、四个公开字段与业务响应样例 |
 | [portal-home.jpg](portal-home.jpg) | 同账号访问`/portal/` |
 | [portal-document.jpg](portal-document.jpg) | 门户“查看文档”→查询示例订单 |
 | [call-logs.jpg](call-logs.jpg) | 后台“调用日志”，展示真实调用结果 |
+
+补充映射截图直接截取浏览器当前视口，保留原始 JPEG；请求预览的 `sample-tenant` 是界面自带样例占位。出参图使用既有 r2 配置；截图过程中以公开订单样例执行了“预览返回处理”，规则校验通过，没有保存或发布新修订。两图均已检查无密码、AppSecret、Token、私钥或公司环境地址。
 
 ## 更新规则
 
