@@ -1,0 +1,19 @@
+/* 已登记人员目录（两端共用）：只使用 var(--op-*) 令牌。 */
+.employee-directory { min-width: 0; color: var(--op-color-text); }
+.employee-directory-context { display: flex; align-items: center; gap: 4px; margin: 0 0 var(--op-space-md); font-weight: 600; overflow-wrap: anywhere; }
+.employee-directory-filters { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto auto; align-items: end; gap: var(--op-space-sm); margin-bottom: var(--op-space-sm); }
+.employee-directory-filters label { display: grid; gap: var(--op-space-xs); margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.employee-directory-results { margin: var(--op-space-md) 0; padding: 0; list-style: none; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+.employee-directory-results > li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-md); padding: var(--op-space-sm) var(--op-space-md); border-bottom: 1px solid var(--op-color-divider); }
+.employee-directory-results > li:last-child { border-bottom: 0; }
+.employee-directory-person { display: grid; flex: 1 1 190px; gap: 2px; min-width: 0; overflow-wrap: anywhere; }
+.employee-directory-person > span { color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.employee-directory-seen { display: grid; gap: 2px; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.employee-directory-empty { padding: var(--op-space-lg); border: 1px dashed var(--op-color-border); border-radius: var(--op-radius-lg); color: var(--op-color-text-secondary); }
+.employee-directory-empty p { margin: 0 0 var(--op-space-sm); }
+@media (max-width: 600px) {
+  .employee-directory-filters { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .employee-directory-results > li { align-items: flex-start; gap: var(--op-space-sm); }
+  .employee-directory-person { flex-basis: calc(100% - 120px); }
+  .employee-directory-seen { flex-basis: 100%; order: 2; }
+}

@@ -1,0 +1,7 @@
+packages:
+  - cyl-openplatform-admin-web
+  - cyl-openplatform-portal-web
+  - cyl-openplatform-web-shared
+
+allowBuilds:
+  esbuild: true

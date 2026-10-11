@@ -1,0 +1,45 @@
+/* 组件展示页布局：只使用 var(--op-*) 令牌。 */
+html, body { margin: 0; background: var(--op-color-bg-layout); color: var(--op-color-text); font-family: var(--op-font-family); font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); }
+* { box-sizing: border-box; }
+.uikit-shell { display: grid; grid-template-columns: var(--op-layout-sidebar) minmax(0, 1fr); min-height: 100vh; }
+.uikit-toc { position: sticky; top: 0; display: flex; flex-direction: column; gap: 2px; height: 100vh; padding: var(--op-space-xl) var(--op-space-md); border-right: 1px solid var(--op-color-border); background: var(--op-color-bg-surface); }
+.uikit-toc strong { padding: 0 var(--op-space-md) var(--op-space-md); font-size: var(--op-font-size-lg); }
+.uikit-toc a { padding: 6px var(--op-space-md); border-radius: var(--op-radius-md); color: var(--op-color-text-secondary); text-decoration: none; font-size: var(--op-font-size-sm); }
+.uikit-toc a:hover { background: var(--op-color-bg-hover); color: var(--op-color-text); }
+.uikit-main { min-width: 0; padding: 0 var(--op-space-xl) var(--op-space-xl); }
+.uikit-main > .uikit-section { max-width: 1240px; margin-left: auto; margin-right: auto; }
+.uikit-toolbar { position: sticky; top: 0; z-index: 10; display: flex; align-items: center; gap: var(--op-space-md); margin: 0 calc(-1 * var(--op-space-xl)) var(--op-space-xl); padding: var(--op-space-md) var(--op-space-xl); border-bottom: 1px solid var(--op-color-border); background: var(--op-color-bg-surface); }
+.uikit-section { margin-bottom: var(--op-space-xxl); scroll-margin-top: 72px; }
+.uikit-section > header h2 { margin: 0; font-size: var(--op-font-size-lg); line-height: var(--op-line-height-lg); font-weight: 600; }
+.uikit-section > header p { margin: var(--op-space-xs) 0 var(--op-space-md); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.uikit-panel { padding: var(--op-space-xl); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); }
+.uikit-row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-md); }
+.uikit-row + .uikit-row { margin-top: var(--op-space-lg); }
+.uikit-row--tight { gap: 0; }
+.uikit-swatch-group + .uikit-swatch-group { margin-top: var(--op-space-lg); }
+.uikit-swatch-group h3 { margin: 0 0 var(--op-space-sm); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); font-weight: 500; }
+.uikit-swatches { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: var(--op-space-md); }
+.uikit-swatch { display: grid; grid-template-columns: 32px 1fr; grid-template-rows: auto auto; column-gap: var(--op-space-sm); align-items: center; }
+.uikit-swatch__chip { grid-row: 1 / 3; width: 32px; height: 32px; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); }
+.uikit-swatch__name { font-size: var(--op-font-size-sm); }
+.uikit-swatch__value { color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.uikit-gradient { margin-top: var(--op-space-lg); padding: var(--op-space-md) var(--op-space-lg); border-radius: var(--op-radius-lg); background: var(--op-gradient-accent); }
+.uikit-gradient span { color: var(--op-color-on-primary); font-weight: 600; }
+.uikit-type-row { display: grid; grid-template-columns: 120px 1fr; align-items: baseline; gap: var(--op-space-lg); padding: var(--op-space-sm) 0; border-top: 1px solid var(--op-color-divider); }
+.uikit-type-row:first-child { border-top: 0; }
+.uikit-type-meta { color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.uikit-dl { display: grid; grid-template-columns: 96px 1fr; gap: var(--op-space-md) var(--op-space-lg); margin: 0; align-items: center; }
+.uikit-dl dt { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.uikit-dl dd { margin: 0; min-width: 0; }
+.uikit-cell-main { display: flex; flex-direction: column; min-width: 0; }
+.uikit-cell-main a { color: var(--op-color-text); font-weight: 500; text-decoration: none; }
+.uikit-cell-main a:hover { color: var(--op-color-primary); }
+.uikit-inline-value { display: flex; align-items: center; min-height: var(--op-control-md); gap: var(--op-space-xs); }
+.uikit-grid-4 { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--op-space-lg); }
+.uikit-grid-4 > * { border: 1px dashed var(--op-color-border); border-radius: var(--op-radius-lg); }
+.uikit-actionbar-demo { position: relative; height: 160px; overflow: auto; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+.uikit-actionbar-demo p { height: 200px; margin: 0; padding: var(--op-space-lg); }
+.uikit-section .op-page-header + .op-page-header { margin-top: var(--op-space-lg); padding-top: var(--op-space-lg); border-top: 1px dashed var(--op-color-border); }
+.uikit-section .op-page-header { margin-bottom: 0; }
+.uikit-metrics { display: flex; gap: var(--op-space-xxl); margin-top: var(--op-space-lg); }
+.uikit-span-2 { grid-column: span 2; }

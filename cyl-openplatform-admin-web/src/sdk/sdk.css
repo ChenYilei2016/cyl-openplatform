@@ -1,0 +1,31 @@
+/* 114 设置 · Java SDK：列表 + 抽屉，只用设计令牌。 */
+.sdk-inline { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-xs); }
+.sdk-kind { align-self: flex-start; margin-bottom: var(--op-space-md); }
+.sdk-row--selected > td { background: var(--op-color-bg-selected); }
+.sdk-more-filters { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+
+.sdk-drawer-footer,
+.sdk-actions { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--op-space-sm); }
+.sdk-workspace-status { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm) var(--op-space-lg); margin: var(--op-space-md) 0 var(--op-space-lg); padding-bottom: var(--op-space-lg); border-bottom: 1px solid var(--op-color-divider); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.sdk-workspace-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: var(--op-space-xl); }
+.sdk-section { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: var(--op-space-md); }
+.sdk-section > * { max-width: 100%; }
+.sdk-section h3 { margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.sdk-section form { display: flex; align-self: stretch; flex-direction: column; align-items: flex-start; gap: var(--op-space-md); }
+.sdk-field { display: flex; min-width: 0; align-self: stretch; flex-direction: column; gap: var(--op-space-xs); }
+.sdk-facts { display: grid; align-self: stretch; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--op-space-md); }
+.sdk-section details { align-self: stretch; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.sdk-section details > summary { cursor: pointer; }
+.sdk-section pre,
+.sdk-digest { display: block; margin: var(--op-space-sm) 0 0; padding: var(--op-space-sm) var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-code-bg); color: var(--op-color-code-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.sdk-section input[type="file"] { max-width: 100%; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.sdk-section input[type="file"]::file-selector-button { margin-right: var(--op-space-md); padding: var(--op-space-xs) var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-surface); color: var(--op-color-text); font: inherit; cursor: pointer; }
+.sdk-section input[type="file"]:disabled::file-selector-button { background: var(--op-color-bg-subtle); color: var(--op-color-text-tertiary); cursor: default; }
+.sdk-legacy-choice { display: flex; flex-direction: column; gap: var(--op-space-xs); margin-bottom: var(--op-space-lg); }
+.sdk-notes { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.sdk-confirm { display: flex; flex-direction: column; gap: var(--op-space-md); margin-top: var(--op-space-lg); padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+
+@media (max-width: 760px) {
+  .sdk-workspace-grid,
+  .sdk-facts { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,6 @@
+/* 109 API 列表：只使用 var(--op-*) 令牌。 */
+.op-list-page { max-width: 1800px; }
+.op-cell-ellipsis { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+/* 119：名称行内的 MCP 标记，不撑开列宽。 */
+.api-directory__title-row { display: flex; align-items: center; gap: var(--op-space-xs); min-width: 0; }
+.api-directory__mcp { flex: none; margin: 0; }

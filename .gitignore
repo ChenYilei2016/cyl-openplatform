@@ -1,0 +1,22 @@
+**/target/
+**/node_modules/
+**/dist/
+.idea/
+*.iml
+.DS_Store
+.env
+.env.*
+!.env.example
+*.log
+**/.flattened-pom.xml
+
+devops/docker/app.jar
+
+# 项目内可见的local私有配置；模板与说明提交，真实配置不提交。
+config/local/private/
+
+# 本机状态、运行产物与整理回滚材料；不进入 Git。
+/.local/
+
+# Python regression runner bytecode
+__pycache__/

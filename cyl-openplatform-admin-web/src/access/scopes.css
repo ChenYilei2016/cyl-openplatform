@@ -1,0 +1,48 @@
+/* 113 权限组列表与抽屉：只使用 var(--op-*) 令牌。 */
+.scope-list { display: flex; flex-direction: column; gap: var(--op-space-lg); }
+.scope-code { font-family: var(--op-font-code); }
+.scope-row--active > td { background: var(--op-color-bg-selected); }
+.scope-more-filters { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.scope-drawer-footer { display: flex; justify-content: flex-end; gap: var(--op-space-sm); }
+
+.scope-subtitle { display: flex; flex-wrap: wrap; gap: var(--op-space-xs) var(--op-space-lg); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+
+.scope-settings { display: flex; flex-direction: column; gap: var(--op-space-lg); max-width: 640px; }
+.scope-field { display: flex; flex-direction: column; gap: var(--op-space-xs); }
+.scope-switches { display: flex; flex-direction: column; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+.scope-switch { display: flex; align-items: flex-start; gap: var(--op-space-md); padding: var(--op-space-lg); }
+.scope-switch + .scope-switch { border-top: 1px solid var(--op-color-divider); }
+.scope-switch strong { font-weight: 600; }
+.scope-switch p { margin: var(--op-space-xs) 0 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+
+.scope-note,
+.scope-warning,
+.scope-success { margin: 0; padding: var(--op-space-sm) var(--op-space-md); border-radius: var(--op-radius-md); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.scope-note { background: var(--op-color-bg-subtle); color: var(--op-color-text-secondary); }
+.scope-warning { background: var(--op-color-warning-soft); color: var(--op-color-text); }
+.scope-success { background: var(--op-color-success-soft); color: var(--op-color-text); }
+
+.scope-apis,
+.scope-tenants { display: flex; flex-direction: column; gap: var(--op-space-md); }
+.scope-add { display: flex; flex-wrap: wrap; gap: var(--op-space-sm); }
+.scope-add__select,
+.scope-add__input { flex: 1 1 320px; min-width: 0; }
+
+/* 新凭据默认授予摘要：列表上方一条，名称可点开权限组。 */
+.scope-defaults { display: flex; flex-direction: column; gap: var(--op-space-sm); padding: var(--op-space-md) var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); }
+.scope-defaults__head { display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--op-space-xs) var(--op-space-sm); font-size: var(--op-font-size-sm); }
+.scope-defaults__icon { align-self: center; color: var(--op-color-primary); }
+.scope-defaults__count { color: var(--op-color-text-secondary); }
+.scope-defaults__hint { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.scope-defaults__filter { margin-left: auto; padding-inline: 0; }
+.scope-defaults__chips { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-xs) var(--op-space-sm); }
+.scope-defaults__chip { height: 24px; padding: 0 var(--op-space-sm); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-sm); background: var(--op-color-primary-soft); color: var(--op-color-primary); font: inherit; font-size: var(--op-font-size-xs); cursor: pointer; }
+.scope-defaults__chip:hover { border-color: var(--op-color-primary); }
+.scope-defaults__chip:focus-visible,
+.scope-defaults__link:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 1px; }
+.scope-defaults__skipped,
+.scope-defaults__empty { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.scope-defaults__link { padding: 0; border: 0; background: transparent; color: var(--op-color-warning); font: inherit; cursor: pointer; text-decoration: underline; }
+
+.scope-count-link { border: 0; padding: 0; background: transparent; color: var(--op-color-primary); font: inherit; cursor: pointer; }
+.scope-count-link:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 2px; }

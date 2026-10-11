@@ -1,0 +1,73 @@
+{
+  "service": "orders",
+  "version": "v1",
+  "method": "query",
+  "name": "虚构订单查询",
+  "category": "订单示例",
+  "owner": "示例研发",
+  "scopeCodes": [
+    "orders.read"
+  ],
+  "requestSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "required": true,
+        "defaultValue": "COMMON-001",
+        "description": "订单号"
+      }
+    }
+  },
+  "responseSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "required": true
+      },
+      "tenantId": {
+        "type": "STRING",
+        "required": true
+      },
+      "amount": {
+        "type": "NUMBER",
+        "required": true
+      },
+      "status": {
+        "type": "STRING",
+        "required": true
+      }
+    }
+  },
+  "errorDefinitions": [
+    {
+      "code": "40300001",
+      "message": "提供方拒绝人员访问此订单"
+    },
+    {
+      "code": "40400001",
+      "message": "租户内无此订单"
+    }
+  ],
+  "binding": {
+    "protocol": "HTTP",
+    "timeoutMillis": 2000,
+    "http": {
+      "url": "http://127.0.0.1:8091/internal/orders/query",
+      "method": "POST"
+    }
+  },
+  "mappings": [
+    {
+      "target": "orderNo",
+      "source": "REQUEST",
+      "path": "orderNo"
+    },
+    {
+      "target": "tenantId",
+      "source": "CONTEXT",
+      "path": "tenantId"
+    }
+  ]
+}

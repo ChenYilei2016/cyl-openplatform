@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.connection.dal.mapper.DubboConnectionUsageMapper">
+    <select id="usages" resultType="io.github.chenyilei2016.openplatform.domain.connection.DubboConnectionUsageRepository$Usage">
+        SELECT api_id, name, revision, kind FROM (
+            SELECT id AS api_id, name, dubbo_connection_revision AS revision, 'DRAFT' AS kind
+            FROM catalog_api_draft WHERE environment_id=#{environmentId} AND dubbo_connection_id = #{connectionId}
+            UNION ALL
+            SELECT r.api_id, r.name, r.dubbo_connection_revision AS revision,
+                   CASE WHEN s.live_release_id = r.id THEN 'LIVE' ELSE 'PENDING' END AS kind
+            FROM publication_release r JOIN publication_state s
+              ON (s.live_release_id = r.id OR s.pending_release_id = r.id)
+            WHERE r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND r.dubbo_connection_id = #{connectionId}
+        ) usages ORDER BY api_id, kind, revision
+    </select>
+    <select id="referenced" resultType="io.github.chenyilei2016.openplatform.domain.connection.DubboConnectionRepository$RevisionKey">
+        SELECT connection_id, revision FROM (
+            SELECT r.dubbo_connection_id AS connection_id, r.dubbo_connection_revision AS revision
+            FROM publication_release r
+            JOIN publication_state s ON (s.live_release_id = r.id OR s.pending_release_id = r.id)
+            JOIN dubbo_connection c ON c.id = r.dubbo_connection_id
+            WHERE r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND c.environment_id = #{environmentId} AND c.enabled = true
+            UNION
+            SELECT d.dubbo_connection_id AS connection_id, d.dubbo_connection_revision AS revision
+            FROM catalog_api_draft d JOIN dubbo_connection c ON c.id = d.dubbo_connection_id
+            WHERE d.environment_id=#{environmentId} AND c.environment_id = #{environmentId} AND c.enabled = true
+        ) referenced ORDER BY connection_id, revision LIMIT #{limit}
+    </select>
+    <select id="isReferenced" resultType="boolean">
+        SELECT EXISTS(SELECT 1 FROM catalog_api_draft
+                      WHERE environment_id=#{environmentId} AND dubbo_connection_id = #{connectionId} AND dubbo_connection_revision = #{revision})
+            OR EXISTS(SELECT 1 FROM publication_release r JOIN publication_state s
+                      ON (s.live_release_id = r.id OR s.pending_release_id = r.id)
+                      WHERE r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND r.dubbo_connection_id = #{connectionId} AND r.dubbo_connection_revision = #{revision})
+    </select>
+</mapper>

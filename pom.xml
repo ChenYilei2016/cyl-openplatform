@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>4.0.7</version>
+        <relativePath/>
+    </parent>
+    <groupId>io.github.chenyilei2016</groupId>
+    <artifactId>cyl-openplatform</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>CYL API 开放平台</name>
+    <modules>
+        <module>openapi-provider-sdk</module>
+        <module>cyl-openplatform-domain</module>
+        <module>cyl-openplatform-application</module>
+        <module>cyl-openplatform-infrastructure</module>
+        <module>cyl-openplatform-interface</module>
+        <module>examples/order-provider</module>
+        <module>cyl-openplatform-server</module>
+    </modules>
+    <properties>
+        <java.version>25</java.version>
+        <dubbo.version>3.3.6</dubbo.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    </properties>
+    <licenses><license><name>Apache License, Version 2.0</name><url>https://www.apache.org/licenses/LICENSE-2.0</url><distribution>repo</distribution></license></licenses>
+    <dependencyManagement><dependencies>
+        <dependency><groupId>org.springframework.cloud</groupId><artifactId>spring-cloud-dependencies</artifactId><version>2025.1.2</version><type>pom</type><scope>import</scope></dependency>
+        <dependency><groupId>com.alibaba.cloud</groupId><artifactId>spring-cloud-alibaba-dependencies</artifactId><version>2025.1.0.0</version><type>pom</type><scope>import</scope></dependency>
+        <dependency><groupId>com.baomidou</groupId><artifactId>mybatis-plus-bom</artifactId><version>3.5.16</version><type>pom</type><scope>import</scope></dependency>
+    </dependencies></dependencyManagement>
+    <build><plugins><plugin><groupId>org.apache.maven.plugins</groupId><artifactId>maven-compiler-plugin</artifactId><configuration><annotationProcessorPaths><path><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><version>${lombok.version}</version></path></annotationProcessorPaths></configuration></plugin></plugins></build>
+</project>

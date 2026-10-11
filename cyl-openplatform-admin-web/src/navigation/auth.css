@@ -1,0 +1,17 @@
+/* 108 登录/资格页：只使用 var(--op-*) 令牌。 */
+.op-auth { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: var(--op-space-lg); min-height: 100dvh; padding: var(--op-space-xl); background: var(--op-color-bg-layout); outline: none; }
+.op-auth__card { display: flex; flex-direction: column; align-items: center; width: min(400px, 100%); padding: var(--op-space-xxl) var(--op-space-xl); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-xl); background: var(--op-color-bg-surface); box-shadow: var(--op-shadow-popover); text-align: center; }
+.op-auth__brand { display: flex; align-items: center; gap: var(--op-space-sm); margin-bottom: var(--op-space-xxl); font-weight: 600; text-align: left; }
+.op-auth__brand small { display: block; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); font-weight: 400; }
+.op-auth__logo { display: grid; place-items: center; width: 32px; height: 32px; border-radius: var(--op-radius-lg); background: var(--op-gradient-accent); }
+.op-auth__logo span { width: 13px; height: 13px; border: 2.5px solid var(--op-color-on-primary); border-radius: 50%; }
+.op-auth__icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: var(--op-space-lg); border-radius: 50%; background: var(--op-color-primary-soft); color: var(--op-color-primary); font-size: var(--op-font-size-xl); }
+.op-auth__icon--forbidden, .op-auth__icon--error { background: var(--op-color-error-soft); color: var(--op-color-error); }
+.op-auth h1 { margin: 0; font-size: var(--op-font-size-xl); line-height: var(--op-line-height-xl); font-weight: 600; }
+.op-auth p { margin: var(--op-space-sm) 0 var(--op-space-xl); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.op-auth .op-auth__note { margin-bottom: 0; }
+.op-auth__portal { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); text-decoration: none; }
+.op-auth__portal:hover { color: var(--op-color-primary); }
+
+.op-auth__form { align-self: stretch; text-align: left; }
+.op-auth__browse { margin-top: var(--op-space-lg); }

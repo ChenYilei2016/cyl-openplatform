@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS environment_release_transfer (
+    environment_id VARCHAR(48) NOT NULL DEFAULT 'local',
+    INDEX idx_transfer_environment(environment_id,created_at,id),
+ id VARCHAR(36) PRIMARY KEY,
+ source_release_id VARCHAR(36) NOT NULL,
+ source_environment VARCHAR(48) NULL,
+ target_id VARCHAR(48) NOT NULL,
+ service VARCHAR(64) NOT NULL,
+ version VARCHAR(32) NOT NULL,
+ method VARCHAR(64) NOT NULL,
+ request_json MEDIUMTEXT NOT NULL,
+ delivery_state VARCHAR(16) NOT NULL,
+ error VARCHAR(500),
+ receipt_json TEXT,
+ observations_json TEXT NOT NULL,
+ created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+ record_version BIGINT NOT NULL,
+ KEY idx_environment_transfer_created (created_at,id)
+) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;

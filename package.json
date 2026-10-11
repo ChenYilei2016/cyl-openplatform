@@ -1,0 +1,67 @@
+{
+  "name": "cyl-openplatform-web",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@11.12.0",
+  "engines": {
+    "node": ">=22.13.0"
+  },
+  "scripts": {
+    "test:web": "pnpm -r --if-present test",
+    "build:web": "pnpm lint:style && pnpm -r --if-present build",
+    "lint:style": "stylelint \"cyl-openplatform-*/src/**/*.css\""
+  },
+  "devDependencies": {
+    "stylelint": "^16.26.1"
+  },
+  "stylelint": {
+    "rules": {
+      "color-no-hex": [
+        true,
+        {
+          "message": "页面样式只能使用 var(--op-*) 设计令牌（106 第 3.1 节）"
+        }
+      ],
+      "color-named": [
+        "never",
+        {
+          "message": "页面样式只能使用 var(--op-*) 设计令牌（106 第 3.1 节）"
+        }
+      ],
+      "function-disallowed-list": [
+        [
+          "rgb",
+          "rgba",
+          "hsl",
+          "hsla"
+        ],
+        {
+          "message": "页面样式只能使用 var(--op-*) 设计令牌（106 第 3.1 节）"
+        }
+      ],
+      "selector-disallowed-list": [
+        [
+          "/\\.ant-/"
+        ],
+        {
+          "message": "不要覆盖 antd 内部类名；用主题令牌或共享 ui 组件（106 第 3.1 节）"
+        }
+      ],
+      "declaration-no-important": true
+    },
+    "overrides": [
+      {
+        "files": [
+          "cyl-openplatform-web-shared/src/ui/**/*.css"
+        ],
+        "rules": {
+          "selector-disallowed-list": null
+        }
+      }
+    ],
+    "ignoreFiles": [
+      "**/node_modules/**",
+      "**/dist/**"
+    ]
+  }
+}

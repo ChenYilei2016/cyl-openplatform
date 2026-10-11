@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent><groupId>io.github.chenyilei2016</groupId><artifactId>cyl-openplatform</artifactId><version>0.1.0-SNAPSHOT</version></parent>
+    <artifactId>cyl-openplatform-server</artifactId>
+    <dependencies>
+        <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><scope>test</scope></dependency>
+
+
+        <!-- 网关测试只复用订单契约；提供方认证适配随独立Provider进程加载。 -->
+        <dependency>
+            <groupId>io.github.chenyilei2016</groupId><artifactId>example-order-provider</artifactId><version>${project.version}</version><scope>test</scope>
+            <exclusions>
+                <exclusion><groupId>io.github.chenyilei2016</groupId><artifactId>openapi-provider-sdk-spring-boot4-starter</artifactId></exclusion>
+                <exclusion><groupId>io.github.chenyilei2016</groupId><artifactId>openapi-provider-sdk-dubbo-apache</artifactId></exclusion>
+            </exclusions>
+        </dependency>
+        <dependency><groupId>io.github.chenyilei2016</groupId><artifactId>openapi-provider-sdk-core</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>io.github.chenyilei2016</groupId><artifactId>cyl-openplatform-interface</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>io.github.chenyilei2016</groupId><artifactId>cyl-openplatform-infrastructure</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-actuator</artifactId></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc-test</artifactId><scope>test</scope></dependency>
+        <dependency><groupId>com.h2database</groupId><artifactId>h2</artifactId><scope>test</scope></dependency>
+    </dependencies>
+    <build>
+        <finalName>cyl-openplatform-server</finalName>
+        <resources>
+            <resource><directory>src/main/resources</directory></resource>
+            <resource><directory>../cyl-openplatform-admin-web/dist</directory><targetPath>static/admin</targetPath></resource>
+            <resource><directory>../cyl-openplatform-portal-web/dist</directory><targetPath>static/portal</targetPath></resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-dependency-plugin</artifactId>
+                <executions><execution><id>test-dependency-paths</id><goals><goal>properties</goal></goals></execution></executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <!-- 本地网络验收不继承宿主机SOCKS代理；JDK25/macOS会自动注入，Dubbo不排除IPv6回环。 -->
+                    <argLine>-DsocksProxyHost= -Dfile.encoding=UTF-8 -javaagent:${org.mockito:mockito-core:jar}</argLine>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId><artifactId>maven-failsafe-plugin</artifactId><version>3.5.5</version>
+                <configuration>
+                    <classesDirectory>${project.build.outputDirectory}</classesDirectory>
+                    <!-- 本地网络验收不继承宿主机SOCKS代理；JDK25/macOS会自动注入，Dubbo不排除IPv6回环。 -->
+                    <argLine>-DsocksProxyHost= -Dfile.encoding=UTF-8 -javaagent:${org.mockito:mockito-core:jar}</argLine>
+                    <systemPropertyVariables><order.provider.jar>${project.basedir}/../examples/order-provider/target/example-order-provider-exec.jar</order.provider.jar></systemPropertyVariables>
+                </configuration>
+                <executions><execution><goals><goal>integration-test</goal><goal>verify</goal></goals></execution></executions>
+            </plugin>
+            <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId><executions><execution><id>repackage</id><goals><goal>repackage</goal></goals></execution></executions></plugin>
+        </plugins>
+    </build>
+</project>

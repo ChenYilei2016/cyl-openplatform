@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.documentation.dal.mapper.DocumentCatalogMapper">
+    <sql id="tenantVisibility">
+        AND d.portal_visible=TRUE
+        AND EXISTS (SELECT 1 FROM publication_release_scope rs JOIN access_scope a ON a.code=rs.scope_code
+            WHERE rs.release_id=r.id AND a.enabled=TRUE AND (a.public_access=TRUE OR EXISTS
+                (SELECT 1 FROM access_tenant_scope_grant tg WHERE tg.tenant_id=#{tenantId}
+                 AND tg.scope_code=a.code AND tg.status='ACTIVE')))
+    </sql>
+    <sql id="effectiveDocuments">
+        FROM publication_state s JOIN publication_release r ON r.id=s.live_release_id
+        JOIN catalog_api_draft d ON d.id=r.api_id
+        LEFT JOIN catalog_category_alias ca ON ca.category_key=r.category
+        LEFT JOIN catalog_category c ON c.id=ca.category_id
+        WHERE d.environment_id=#{environmentId} AND r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND s.enabled=true AND r.status='APPLIED'
+        AND (r.name LIKE #{pattern} ESCAPE '!' OR r.service LIKE #{pattern} ESCAPE '!' OR r.method LIKE #{pattern} ESCAPE '!')
+        <if test="q.category != null">AND COALESCE(c.id,r.category)=COALESCE((SELECT category_id FROM catalog_category_alias WHERE category_key=#{q.category}),#{q.category})</if>
+        <if test="q.service != null">AND r.service=#{q.service}</if>
+        <if test="q.version != null">AND r.version=#{q.version}</if>
+        <if test="q.method != null">AND r.method=#{q.method}</if>
+        <if test="q.mcpOnly">AND r.mcp_tool_enabled=TRUE AND r.lifecycle_status != 'RETIRED'</if>
+        <if test="audience.usesTenantPermissions()"><include refid="tenantVisibility"/></if>
+        <if test="audience.requiresScopes()">
+            AND EXISTS (SELECT 1 FROM publication_release_scope rs JOIN access_scope a ON a.code=rs.scope_code
+                WHERE rs.release_id=r.id AND a.enabled=true AND rs.scope_code IN
+                <foreach collection="codes" item="code" open="(" separator="," close=")">#{code}</foreach>)
+        </if>
+    </sql>
+    <select id="selectDocuments" resultType="io.github.chenyilei2016.openplatform.infrastructure.publication.dal.dataobject.PublicationReleaseDO">
+        SELECT r.id,r.api_id,s.state_version AS effective_state_version,r.draft_revision,r.name,COALESCE(c.name,r.category) AS category,
+               r.service,r.version,r.method,r.lifecycle_status,r.mcp_tool_enabled
+        <include refid="effectiveDocuments"/>
+        ORDER BY r.service,r.version,r.method,r.id
+    </select>
+    <select id="selectCategories" resultType="io.github.chenyilei2016.openplatform.infrastructure.documentation.dal.dataobject.DocumentCategoryDO">
+        SELECT COALESCE(c.name,r.category) AS category,COUNT(*) AS api_count
+        <include refid="effectiveDocuments"/>
+        GROUP BY COALESCE(c.name,r.category) ORDER BY COALESCE(c.name,r.category)
+    </select>
+    <select id="selectVisibleDocument" resultType="io.github.chenyilei2016.openplatform.infrastructure.publication.dal.dataobject.PublicationReleaseDO">
+        SELECT r.id,r.snapshot_json,s.state_version AS effective_state_version,COALESCE(c.name,r.category) AS category
+        FROM publication_state s JOIN publication_release r ON r.id=s.live_release_id
+        JOIN catalog_api_draft d ON d.id=r.api_id
+        LEFT JOIN catalog_category_alias ca ON ca.category_key=r.category
+        LEFT JOIN catalog_category c ON c.id=ca.category_id
+        WHERE d.environment_id=#{environmentId} AND r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND s.enabled=TRUE AND r.status='APPLIED'
+          AND r.service=#{service} AND r.version=#{version} AND r.method=#{method}
+        <include refid="tenantVisibility"/>
+    </select>
+</mapper>

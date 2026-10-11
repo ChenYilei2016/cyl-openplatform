@@ -1,0 +1,31 @@
+name: Bug 报告
+description: 提供可复现的错误，勿包含敏感信息
+title: "[Bug] "
+body:
+  - type: markdown
+    attributes:
+      value: "安全问题请按仓库 SECURITY.md 处理；不要提交密码、Secret、Token或真实业务数据。"
+  - type: textarea
+    id: environment
+    attributes:
+      label: 版本与环境
+      description: 项目提交、JDK、Node、系统和部署方式
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: 最小复现步骤
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: 期望与实际结果
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: 脱敏证据
+      description: HTTP状态、错误码、requestId、日志或截图；说明已检查的事项

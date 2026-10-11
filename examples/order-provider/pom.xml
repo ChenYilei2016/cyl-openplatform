@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent><groupId>io.github.chenyilei2016</groupId><artifactId>cyl-openplatform</artifactId><version>0.1.0-SNAPSHOT</version><relativePath>../../pom.xml</relativePath></parent>
+    <artifactId>example-order-provider</artifactId>
+    <dependencies>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-actuator</artifactId></dependency>
+        <dependency><groupId>io.github.chenyilei2016</groupId><artifactId>openapi-provider-sdk-spring-boot4-starter</artifactId><version>${project.version}</version></dependency>
+        <dependency><groupId>org.projectlombok</groupId><artifactId>lombok</artifactId><scope>provided</scope></dependency>
+        <dependency><groupId>org.apache.dubbo</groupId><artifactId>dubbo</artifactId><version>${dubbo.version}</version></dependency>
+        <dependency><groupId>com.alibaba.nacos</groupId><artifactId>nacos-client</artifactId></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc</artifactId></dependency>
+        <!-- 只提供共享Feign契约注解；提供方不创建Feign客户端。 -->
+        <dependency><groupId>org.springframework.cloud</groupId><artifactId>spring-cloud-openfeign-core</artifactId><scope>provided</scope></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-validation</artifactId></dependency>
+        <dependency><groupId>org.springframework.boot</groupId><artifactId>spring-boot-starter-webmvc-test</artifactId><scope>test</scope></dependency>
+    </dependencies>
+    <build>
+        <finalName>example-order-provider</finalName>
+        <plugins>
+            <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId><executions><execution><id>repackage</id><goals><goal>repackage</goal></goals><configuration><classifier>exec</classifier></configuration></execution></executions></plugin>
+        </plugins>
+    </build>
+</project>

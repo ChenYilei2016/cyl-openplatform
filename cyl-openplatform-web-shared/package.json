@@ -1,0 +1,54 @@
+{
+  "name": "@cyl/open-platform-web-shared",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./json": "./src/json.ts",
+    "./http": "./src/http.ts",
+    "./download": "./src/download.ts",
+    "./components": "./src/components.tsx",
+    "./lifecycle": "./src/lifecycle/LifecycleDetails.tsx",
+    "./styles/*": "./src/styles/*",
+    "./documentation/DocumentContent": "./src/documentation/DocumentContent.tsx",
+    "./documentation/DocumentExport": "./src/documentation/DocumentExport.tsx",
+    "./documentation/DocumentExplorer": "./src/documentation/DocumentExplorer.tsx",
+    "./documentation/SchemaView": "./src/documentation/SchemaView.tsx",
+    "./documentation/api": "./src/documentation/api.ts",
+    "./documentation/invocationExamples": "./src/documentation/invocationExamples.ts",
+    "./documentation/requestSigning": "./src/documentation/requestSigning.ts",
+    "./documentation/types": "./src/documentation/types.ts",
+    "./sdk/api": "./src/sdk/api.ts",
+    "./sdk/AssetDownload": "./src/sdk/AssetDownload.tsx",
+    "./employees/EmployeeProfileSearch": "./src/employees/EmployeeProfileSearch.tsx",
+    "./ui/PlatformTheme": "./src/ui/PlatformTheme.tsx",
+    "./ui/useReadPage": "./src/ui/useReadPage.ts",
+    "./ui/tokens": "./src/ui/tokens.ts",
+    "./ui/components": "./src/ui/components.tsx",
+    "./ui/list": "./src/ui/list.tsx",
+    "./session/signOut": "./src/session/signOut.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^19.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.0",
+    "jsdom": "^26.1.0",
+    "typescript": "^5.9.3",
+    "vite": "^7.1.7",
+    "vitest": "^3.2.4",
+    "@testing-library/react": "^16.3.0",
+    "@types/react-dom": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react": "^19.2.0"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "5.103.2",
+    "antd": "6.6.5",
+    "@ant-design/icons": "6.3.4"
+  }
+}

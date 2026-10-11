@@ -1,0 +1,108 @@
+/* 115 SDK 中心与接口绑定 SDK：版本卡片、依赖坐标、更新日志时间线。只用设计令牌，元素样式在本页作用域内显式给出。 */
+.op-sdk { display: grid; gap: var(--op-space-xl); max-width: 1280px; margin: 0 auto; padding: var(--op-space-xl) var(--op-space-xl) 64px; color: var(--op-color-text); font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); }
+.op-sdk a, .op-sdk-assets a { color: var(--op-color-primary); text-decoration: none; }
+.op-sdk a:hover, .op-sdk-assets a:hover { text-decoration: underline; }
+.op-sdk :not(pre) > code { padding: 0 var(--op-space-xs); border-radius: var(--op-radius-sm); background: var(--op-color-bg-subtle); font-family: var(--op-font-code); font-size: 0.92em; overflow-wrap: anywhere; }
+.op-sdk-mono { font-family: var(--op-font-code); }
+.op-sdk h2 { margin: 0 0 var(--op-space-md); font-size: var(--op-font-size-xl); font-weight: 600; line-height: var(--op-line-height-xl); letter-spacing: 0; }
+.op-sdk h3 { margin: 0; font-size: var(--op-font-size-lg); font-weight: 600; line-height: var(--op-line-height-lg); }
+.op-sdk-loading { margin: 0; padding: var(--op-space-xl); color: var(--op-color-text-tertiary); text-align: center; }
+
+/* 页头：深色门面 + 依赖坐标 */
+.op-sdk-hero { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--op-space-xl); align-items: center; padding: var(--op-space-xxl); overflow: hidden; border: 1px solid var(--op-portal-chrome-border); border-radius: var(--op-radius-xl); background: radial-gradient(ellipse at 0% 0%, var(--op-portal-glow) 0, transparent 55%), linear-gradient(135deg, var(--op-portal-chrome-bg), var(--op-portal-chrome-bg-2)); color: var(--op-portal-chrome-text); }
+.op-sdk-hero::before { content: ""; position: absolute; inset: 0; background-image: linear-gradient(var(--op-portal-grid-line) 1px, transparent 1px), linear-gradient(90deg, var(--op-portal-grid-line) 1px, transparent 1px); background-size: 32px 32px; pointer-events: none; }
+.op-sdk-hero > * { position: relative; min-width: 0; }
+.op-sdk-hero__eyebrow { margin: 0 0 var(--op-space-sm); color: var(--op-portal-chrome-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); letter-spacing: 0.12em; }
+.op-sdk-hero h1 { margin: 0 0 var(--op-space-sm); background: var(--op-gradient-accent); background-clip: text; color: transparent; font-size: var(--op-font-size-xxl); font-weight: 600; line-height: var(--op-line-height-xxl); letter-spacing: 0; }
+.op-sdk-hero__text > p { margin: 0; color: var(--op-portal-chrome-text-secondary); }
+.op-sdk-hero__links { display: flex; flex-wrap: wrap; gap: var(--op-space-lg); margin-top: var(--op-space-lg); }
+.op-sdk .op-sdk-hero__links a { color: var(--op-portal-chrome-text); }
+.op-sdk-hero__coordinates > p { margin: var(--op-space-sm) 0 0; color: var(--op-portal-chrome-text-tertiary); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); }
+
+/* 筛选 */
+.op-sdk-filter { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--op-space-md); padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-xl); background: var(--op-color-bg-surface); }
+.op-sdk-filter label { display: grid; flex: 1; gap: var(--op-space-xs); min-width: 160px; color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.op-sdk-filter__actions { display: flex; flex-wrap: wrap; gap: var(--op-space-sm); }
+
+/* 版本卡片 */
+.op-sdk-section { min-width: 0; }
+.op-sdk-versions { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: var(--op-space-lg); margin: 0; padding: 0; list-style: none; }
+.op-sdk-version { display: flex; flex-direction: column; gap: var(--op-space-sm); min-width: 0; padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-xl); background: var(--op-color-bg-surface); overflow-wrap: anywhere; }
+.op-sdk-version.is-current { grid-column: span 2; border-color: transparent; background: linear-gradient(var(--op-color-bg-surface), var(--op-color-bg-surface)) padding-box, var(--op-gradient-accent) border-box; box-shadow: 0 0 0 4px var(--op-color-primary-soft); }
+.op-sdk-version__head { display: flex; align-items: center; gap: var(--op-space-sm); }
+.op-sdk-version__number { color: var(--op-color-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xl); font-weight: 600; line-height: var(--op-line-height-xl); }
+.op-sdk-version.is-current .op-sdk-version__number { background: var(--op-gradient-accent); background-clip: text; color: transparent; }
+.op-sdk-version__badge { padding: 0 var(--op-space-sm); border-radius: 999px; background: var(--op-color-primary-soft); color: var(--op-color-primary); font-size: var(--op-font-size-xs); font-weight: 500; line-height: var(--op-line-height-xs); }
+.op-sdk-version__meta { display: grid; gap: 2px; margin: 0; font-size: var(--op-font-size-sm); }
+.op-sdk-version__meta > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--op-space-sm); }
+.op-sdk-version__meta dt { color: var(--op-color-text-tertiary); }
+.op-sdk-version__meta dd { margin: 0; color: var(--op-color-text-secondary); }
+.op-sdk-version__actions { display: flex; flex-wrap: wrap; align-items: flex-start; gap: var(--op-space-sm); margin-top: auto; padding-top: var(--op-space-sm); }
+.op-sdk .pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--op-space-sm); margin-top: var(--op-space-lg); color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.op-sdk .pagination button { min-height: var(--op-control-sm); padding: 0 var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-surface); color: var(--op-color-text); font: inherit; cursor: pointer; }
+.op-sdk .pagination button:hover:not(:disabled) { border-color: var(--op-color-primary); color: var(--op-color-primary); }
+.op-sdk .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 更新日志时间线 */
+.op-sdk-changelog { margin: 0; padding: 0; list-style: none; }
+.op-sdk-changelog > li { position: relative; display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: var(--op-space-xl); padding: 0 0 var(--op-space-xl); }
+.op-sdk-changelog > li::before { content: ""; position: absolute; top: 6px; left: 124px; width: 9px; height: 9px; border-radius: 50%; background: var(--op-gradient-accent); }
+.op-sdk-changelog > li::after { content: ""; position: absolute; top: 20px; bottom: 0; left: 128px; width: 1px; background: var(--op-color-divider); }
+.op-sdk-changelog > li:last-child::after { display: none; }
+.op-sdk-changelog time { color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-sm); text-align: right; }
+.op-sdk-changelog > li > div { min-width: 0; padding-left: var(--op-space-md); }
+.op-sdk-changelog h3 { font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); }
+.op-sdk-changelog .op-sdk-notes { display: -webkit-box; margin: var(--op-space-xs) 0; overflow: hidden; color: var(--op-color-text-secondary); -webkit-box-orient: vertical; -webkit-line-clamp: 4; }
+.op-sdk-notes { white-space: pre-wrap; overflow-wrap: anywhere; }
+.op-sdk-scope { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-sdk-scope summary { cursor: pointer; }
+
+/* 版本详情 */
+.op-sdk-detail { padding: var(--op-space-xl); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-xl); background: var(--op-color-bg-surface); }
+.op-sdk-detail__toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: var(--op-space-sm); margin-bottom: var(--op-space-xl); }
+.op-sdk-detail__header { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: var(--op-space-lg); margin-bottom: var(--op-space-xl); padding-bottom: var(--op-space-lg); border-bottom: 1px solid var(--op-color-divider); }
+.op-sdk-detail__header h2 { margin: var(--op-space-xs) 0; }
+.op-sdk-detail__header p { margin: 0; color: var(--op-color-text-secondary); }
+.op-sdk-detail__columns { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(260px, 1fr); gap: var(--op-space-xxl); align-items: start; }
+.op-sdk-detail__columns h3 { margin: 0 0 var(--op-space-sm); }
+.op-sdk-detail__columns .op-sdk-notes { margin: 0 0 var(--op-space-xl); line-height: 1.8; }
+.op-sdk-integrity { display: grid; gap: var(--op-space-xs); margin: 0; font-size: var(--op-font-size-sm); }
+.op-sdk-integrity > div { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: var(--op-space-sm); }
+.op-sdk-integrity dt { color: var(--op-color-text-tertiary); }
+.op-sdk-integrity dd { margin: 0; }
+.op-sdk-sha { overflow-wrap: anywhere; }
+.op-sdk-detail__guide { display: grid; gap: var(--op-space-sm); padding-left: var(--op-space-xl); border-left: 1px solid var(--op-color-divider); font-size: var(--op-font-size-sm); }
+.op-sdk-detail__guide ol { margin: 0; padding-left: var(--op-space-lg); }
+.op-sdk-detail__guide li { margin-bottom: var(--op-space-sm); }
+.op-sdk-detail__guide p { display: grid; gap: var(--op-space-xs); margin: 0; }
+.op-sdk-detail__guide small { color: var(--op-color-text-tertiary); }
+
+/* 接口绑定资产（API 文档与我的接入中按当前操作列出） */
+.op-sdk-assets { margin-top: var(--op-space-xl); padding-top: var(--op-space-lg); border-top: 1px solid var(--op-color-divider); color: var(--op-color-text); }
+.op-sdk-assets__head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-sm); }
+.op-sdk-assets__head h3 { margin: 0; font-size: var(--op-font-size-lg); font-weight: 600; line-height: var(--op-line-height-lg); }
+.op-sdk-assets__hint { margin: var(--op-space-sm) 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-sdk-assets__list { display: grid; gap: var(--op-space-md); margin: var(--op-space-md) 0; padding: 0; list-style: none; }
+.op-sdk-asset { display: grid; gap: var(--op-space-xs); padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); overflow-wrap: anywhere; }
+.op-sdk-asset h4 { margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.op-sdk-asset p { margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-sdk-asset h5 { margin: var(--op-space-sm) 0 0; font-size: var(--op-font-size-sm); font-weight: 600; }
+.op-sdk-asset .op-sdk-notes { color: var(--op-color-text); }
+.op-sdk-assets .pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--op-space-sm); color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.op-sdk-assets .pagination button { min-height: var(--op-control-sm); padding: 0 var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-surface); color: var(--op-color-text); font: inherit; cursor: pointer; }
+.op-sdk-assets .pagination button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+@media (max-width: 960px) {
+  .op-sdk-hero { grid-template-columns: minmax(0, 1fr); padding: var(--op-space-xl); }
+  .op-sdk-version.is-current { grid-column: auto; }
+  .op-sdk-detail__columns { grid-template-columns: minmax(0, 1fr); }
+  .op-sdk-detail__guide { padding: var(--op-space-lg) 0 0; border-top: 1px solid var(--op-color-divider); border-left: 0; }
+}
+@media (max-width: 760px) {
+  .op-sdk { padding: var(--op-space-lg) var(--op-space-lg) var(--op-space-xxl); }
+  .op-sdk-changelog > li { grid-template-columns: minmax(0, 1fr); gap: var(--op-space-xs); padding-left: var(--op-space-lg); }
+  .op-sdk-changelog > li::before { left: 0; }
+  .op-sdk-changelog > li::after { left: 4px; }
+  .op-sdk-changelog time { text-align: left; }
+  .op-sdk-changelog > li > div { padding-left: 0; }
+}

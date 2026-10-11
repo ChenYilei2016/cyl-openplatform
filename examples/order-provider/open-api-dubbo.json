@@ -1,0 +1,78 @@
+{
+  "service": "orders_dubbo",
+  "version": "v1",
+  "method": "query",
+  "name": "虚构订单查询（Dubbo）",
+  "category": "订单示例",
+  "owner": "示例研发",
+  "scopeCodes": [
+    "orders.read"
+  ],
+  "requestSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "required": true,
+        "defaultValue": "COMMON-001",
+        "description": "订单号"
+      }
+    }
+  },
+  "responseSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "required": true
+      },
+      "tenantId": {
+        "type": "STRING",
+        "required": true
+      },
+      "amount": {
+        "type": "NUMBER",
+        "required": true
+      },
+      "status": {
+        "type": "STRING",
+        "required": true
+      }
+    }
+  },
+  "errorDefinitions": [
+    {
+      "code": "40300001",
+      "message": "提供方拒绝人员访问此订单"
+    },
+    {
+      "code": "40400001",
+      "message": "租户内无此订单"
+    }
+  ],
+  "binding": {
+    "protocol": "DUBBO",
+    "timeoutMillis": 2000,
+    "dubbo": {
+      "interfaceName": "io.github.chenyilei2016.example.order.rpc.OrderQueryFacade",
+      "method": "query",
+      "version": "1.0.0",
+      "group": "order-example",
+      "parameterTypes": [
+        "io.github.chenyilei2016.example.order.rpc.OrderQueryRequest"
+      ]
+    }
+  },
+  "mappings": [
+    {
+      "target": "arg0.orderNo",
+      "source": "REQUEST",
+      "path": "orderNo"
+    },
+    {
+      "target": "arg0.tenantId",
+      "source": "CONTEXT",
+      "path": "tenantId"
+    }
+  ]
+}

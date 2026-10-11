@@ -1,0 +1,80 @@
+{
+  "service": "demo_orders",
+  "version": "v1",
+  "method": "query",
+  "name": "查询示例订单",
+  "description": "根据订单号查询当前租户的订单。入门演示使用 COMMON-001；租户来自已验证的调用身份，无需由调用方传入。",
+  "category": "入门示例",
+  "owner": "REPLACE_WITH_OWNER_ID",
+  "scopeCodes": [
+    "demo.orders.read"
+  ],
+  "operationKind": "QUERY",
+  "employeeRequired": false,
+  "requestSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "required": true,
+        "description": "订单编号",
+        "example": "COMMON-001"
+      }
+    }
+  },
+  "responseSchema": {
+    "type": "OBJECT",
+    "properties": {
+      "orderNo": {
+        "type": "STRING",
+        "description": "订单编号",
+        "example": "COMMON-001"
+      },
+      "tenantId": {
+        "type": "STRING",
+        "description": "已验证的租户ID",
+        "example": "local"
+      },
+      "amount": {
+        "type": "NUMBER",
+        "description": "订单金额",
+        "example": 101.25
+      },
+      "status": {
+        "type": "STRING",
+        "description": "订单状态",
+        "example": "PAID"
+      }
+    },
+    "example": {
+      "orderNo": "COMMON-001",
+      "tenantId": "local",
+      "amount": 101.25,
+      "status": "PAID"
+    }
+  },
+  "errorDefinitions": [],
+  "responseAdapter": {
+    "mode": "DIRECT"
+  },
+  "binding": {
+    "protocol": "HTTP",
+    "timeoutMillis": 3000,
+    "http": {
+      "url": "http://127.0.0.1:8091/internal/orders/query",
+      "method": "POST"
+    }
+  },
+  "mappings": [
+    {
+      "target": "orderNo",
+      "source": "REQUEST",
+      "path": "orderNo"
+    },
+    {
+      "target": "tenantId",
+      "source": "CONTEXT",
+      "path": "tenantId"
+    }
+  ]
+}

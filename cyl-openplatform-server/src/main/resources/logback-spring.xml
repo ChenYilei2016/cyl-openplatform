@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <conversionRule conversionWord="diagnosticException" class="io.github.chenyilei2016.openplatform.logging.DiagnosticThrowableConverter"/>
+    <property name="PLATFORM_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] [requestId=%X{requestId}] [traceId=%X{traceId}] %-5level %logger{40} - %msg%n%diagnosticException"/>
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder><pattern>${PLATFORM_LOG_PATTERN}</pattern><charset>UTF-8</charset></encoder>
+    </appender>
+    <root level="INFO"><appender-ref ref="CONSOLE"/></root>
+    <logger name="org.apache.dubbo" level="WARN"/>
+</configuration>

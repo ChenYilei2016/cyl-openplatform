@@ -1,0 +1,41 @@
+/*
+ * 字段结构表（SchemaView，两端多处共用）：只使用 var(--op-*) 令牌。
+ * 选择器保持低优先级（:where），宿主页面（如门户 API 文档页）可按需覆盖。
+ */
+:where(.schema-view) { min-width: 0; }
+:where(.schema-view) .schema-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--op-space-md); margin-bottom: var(--op-space-sm); }
+:where(.schema-view) .schema-heading h3 { margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-md); font-weight: 600; line-height: var(--op-line-height-md); }
+:where(.schema-view) .schema-actions { display: flex; flex-shrink: 0; gap: var(--op-space-sm); }
+:where(.schema-view) .table-scroll { margin: 0; overflow-x: auto; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+:where(.schema-view) table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); text-align: left; }
+:where(.schema-view) th { padding: var(--op-space-sm) var(--op-space-md); background: var(--op-color-bg-subtle); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); font-weight: 500; white-space: nowrap; }
+:where(.schema-view) th:first-child { width: 32%; }
+:where(.schema-view) th:nth-child(2) { width: 64px; }
+:where(.schema-view) th:nth-child(3) { width: 132px; }
+:where(.schema-view) td { min-width: 0; max-width: none; padding: var(--op-space-sm) var(--op-space-md); border-top: 1px solid var(--op-color-divider); color: var(--op-color-text); vertical-align: top; overflow-wrap: anywhere; }
+:where(.schema-view) tbody tr:hover { background: var(--op-color-bg-hover); }
+:where(.schema-view) td code { font-family: var(--op-font-code); white-space: pre-wrap; overflow-wrap: anywhere; }
+:where(.schema-view) td small { color: var(--op-color-primary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+:where(.schema-view) td p { margin: 0; color: var(--op-color-text-secondary); white-space: pre-wrap; }
+:where(.schema-view) td > div:not(.schema-field) { margin-top: 2px; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+:where(.schema-view) details { margin-top: var(--op-space-md); }
+:where(.schema-view) summary { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+:where(.schema-view) pre { max-height: 420px; margin: var(--op-space-sm) 0 0; padding: var(--op-space-md) var(--op-space-lg); overflow: auto; border-radius: var(--op-radius-lg); background: var(--op-color-code-bg); color: var(--op-color-code-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); }
+
+/* 字段路径：展开按钮 24×24（与门户 API 文档页一致），表头左缩进 = 按钮 24 + 间距 4。 */
+.schema-field { display: flex; align-items: baseline; flex-wrap: nowrap; gap: 4px; }
+.schema-field > code { min-width: 0; color: var(--op-color-text); font-weight: 500; }
+.schema-path-heading { display: block; padding-left: 28px; }
+.schema-view .schema-toggle,
+.schema-toggle-space { flex: 0 0 24px; width: 24px; height: 24px; }
+.schema-view .schema-toggle { display: inline-grid; place-items: center; margin: -3px 0; padding: 0; border: 1px solid transparent; border-radius: var(--op-radius-sm); background: none; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+.schema-view .schema-toggle:hover { border-color: var(--op-color-border); background: var(--op-color-bg-hover); color: var(--op-color-primary); }
+.schema-view .schema-toggle:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 0; }
+.schema-required,
+.schema-optional { display: inline-flex; align-items: center; gap: 4px; font-size: var(--op-font-size-xs); }
+.schema-required { color: var(--op-color-text); font-weight: 500; }
+.schema-required::before { content: ""; width: 6px; height: 6px; flex-shrink: 0; border-radius: 50%; background: var(--op-color-error); }
+.schema-optional { color: var(--op-color-text-tertiary); }
+@media (max-width: 480px) {
+  :where(.schema-view) table { min-width: 440px; }
+}

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.mapper.ApiDraftMapper">
+    <sql id="latestReviewStatus">
+        CASE WHEN latest.id IS NULL THEN 'NOT_SUBMITTED'
+             WHEN latest.status = 'PENDING' THEN 'PENDING_REVIEW'
+             WHEN latest.status = 'APPLIED' AND latest.audit_required = false THEN 'NOT_REQUIRED'
+             WHEN latest.status = 'APPLIED' AND latest.audit_required = true THEN 'APPROVED'
+             WHEN latest.status = 'REJECTED' THEN 'REJECTED'
+             ELSE 'UNKNOWN' END
+    </sql>
+    <select id="selectSummaries" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiSummaryDO">
+        SELECT d.internal_class, d.internal_method, d.mcp_tool_enabled,d.portal_visible, d.id, d.service, d.version, d.method, d.name, COALESCE(c.name,d.category) AS category, d.owner, COALESCE(p.display_name,d.owner) AS owner_name, d.protocol,
+               CASE WHEN p.id IS NOT NULL THEN true ELSE false END AS owner_profile_linked,
+               p.employee_no AS owner_employee_no, p.tenant_id AS owner_tenant_id, p.tenant_name AS owner_tenant_name,
+               d.draft_revision, r.draft_revision AS live_draft_revision,
+               d.definition_json, r.snapshot_json AS live_snapshot_json,
+               COALESCE(s.enabled, false) AS enabled, s.pending_release_id,
+               <include refid="latestReviewStatus"/> AS latest_review_status, latest.draft_revision AS latest_review_draft_revision,
+               current_revision.recorded_at AS updated_at
+        FROM catalog_api_draft d
+        LEFT JOIN catalog_category_alias ca ON ca.category_key=d.category
+        LEFT JOIN catalog_category c ON c.id=ca.category_id
+        LEFT JOIN access_employee_profile p ON p.id=d.owner
+        LEFT JOIN publication_state s ON s.api_id = d.id
+        LEFT JOIN publication_release r ON r.id = s.live_release_id
+        LEFT JOIN catalog_api_revision current_revision ON current_revision.api_id = d.id AND current_revision.revision = d.draft_revision
+        LEFT JOIN publication_release latest ON latest.id = (
+            SELECT recent.id FROM publication_release recent WHERE recent.api_id = d.id
+            ORDER BY recent.submitted_at DESC, recent.id DESC LIMIT 1
+        )
+        WHERE d.environment_id=#{environmentId} AND (d.service LIKE #{pattern} ESCAPE '!' OR d.method LIKE #{pattern} ESCAPE '!'
+               OR d.name LIKE #{pattern} ESCAPE '!' OR CONCAT(d.service, '.', d.method) LIKE #{pattern} ESCAPE '!')
+        <if test="filter.category != null">AND COALESCE(c.id,d.category) = COALESCE((SELECT category_id FROM catalog_category_alias WHERE category_key=#{filter.category}),#{filter.category})</if>
+        <if test="!filter.protocols.isEmpty()">
+            AND d.protocol IN <foreach collection="filter.protocols" item="value" open="(" separator="," close=")">#{value}</foreach>
+        </if>
+        <if test="!filter.publications.isEmpty()">
+            AND (CASE WHEN s.live_release_id IS NULL THEN 'UNPUBLISHED' ELSE 'PUBLISHED' END) IN
+            <foreach collection="filter.publications" item="value" open="(" separator="," close=")">#{value}</foreach>
+        </if>
+        <if test="!filter.reviews.isEmpty()">
+            AND (<include refid="latestReviewStatus"/>) IN
+            <foreach collection="filter.reviews" item="value" open="(" separator="," close=")">#{value}</foreach>
+        </if>
+        <if test="!filter.access.isEmpty()">
+            AND (CASE WHEN COALESCE(s.enabled, false) THEN 'ENABLED' ELSE 'DISABLED' END) IN
+            <foreach collection="filter.access" item="value" open="(" separator="," close=")">#{value}</foreach>
+        </if>
+        <if test="!filter.mcpTools.isEmpty()">
+            AND (CASE WHEN d.mcp_tool_enabled THEN 'ENABLED' ELSE 'DISABLED' END) IN
+            <foreach collection="filter.mcpTools" item="value" open="(" separator="," close=")">#{value}</foreach>
+        </if>
+        <if test="filter.internalClass != null">
+            <choose><when test="filter.internalMatch.exact()">
+                AND (d.internal_class=#{filter.internalClass}<if test="filter.simpleClassExact()"> OR d.internal_class LIKE #{simplePattern} ESCAPE '!' OR d.internal_class LIKE CONCAT('%$',SUBSTRING(#{simplePattern},3)) ESCAPE '!'</if>)
+            </when><otherwise>AND d.internal_class LIKE #{classPattern} ESCAPE '!'</otherwise></choose>
+        </if>
+        <if test="filter.internalMethod != null"><choose><when test="filter.internalMatch.exact()">AND d.internal_method=#{filter.internalMethod}</when><otherwise>AND d.internal_method LIKE #{methodPattern} ESCAPE '!'</otherwise></choose></if>
+        <if test="filter.ownerId != null">AND p.id=#{filter.ownerId}</if>
+        <choose>
+            <when test="filter.sort.name() == 'UPDATED_DESC'">ORDER BY (current_revision.recorded_at IS NULL), current_revision.recorded_at DESC, d.id DESC</when>
+            <when test="filter.sort.name() == 'UPDATED_ASC'">ORDER BY (current_revision.recorded_at IS NULL), current_revision.recorded_at, d.id</when>
+            <when test="filter.sort.name() == 'NAME_ASC'">ORDER BY d.name, d.id</when>
+            <when test="filter.sort.name() == 'NAME_DESC'">ORDER BY d.name DESC, d.id DESC</when>
+            <otherwise>ORDER BY d.service, d.version, d.method, d.id</otherwise>
+        </choose>
+    </select>
+    <select id="searchIdentities" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiDraftDO">
+        SELECT id, name, service, version, method, internal_class, internal_method
+        FROM catalog_api_draft
+        WHERE environment_id=#{environmentId} AND (name LIKE #{pattern} ESCAPE '!' OR service LIKE #{pattern} ESCAPE '!' OR method LIKE #{pattern} ESCAPE '!'
+           OR CONCAT(service, '.', method) LIKE #{pattern} ESCAPE '!' OR internal_class LIKE #{pattern} ESCAPE '!')
+        ORDER BY name, id
+        LIMIT #{limit}
+    </select>
+    <select id="selectCategories" resultType="java.lang.String">
+        SELECT name FROM catalog_category
+        WHERE enabled=true AND name LIKE #{pattern} ESCAPE '!'
+        ORDER BY name,id
+    </select>
+    <select id="selectOperations" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiDraftDO">
+        SELECT * FROM catalog_api_draft WHERE environment_id=#{environmentId} AND (
+        <foreach collection="operations" item="op" separator=" OR ">
+            (service=#{op.service} AND version=#{op.version} AND method=#{op.method})
+        </foreach>)
+    </select>
+    <select id="selectToolNameOperations" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiDraftDO">
+        SELECT service, version, method FROM catalog_api_draft
+        WHERE environment_id=#{environmentId} AND CONCAT(service,'_',method,'_',REPLACE(REPLACE(version,'.','_'),'-','_')) IN
+        <foreach collection="toolNames" item="toolName" open="(" separator="," close=")">#{toolName}</foreach>
+        ORDER BY service, method, version
+        LIMIT #{limit}
+    </select>
+    <select id="selectAllForUpdate" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiDraftDO">
+        SELECT * FROM catalog_api_draft WHERE environment_id=#{environmentId} AND id IN
+        <foreach collection="ids" item="id" open="(" separator="," close=")">#{id}</foreach>
+        ORDER BY id FOR UPDATE
+    </select>
+    <insert id="insertAll">
+        INSERT INTO catalog_api_draft
+        (environment_id,id,service,version,method,name,category,owner,protocol,draft_revision,definition_json,dubbo_connection_id,dubbo_connection_revision,internal_class,internal_method,mcp_tool_enabled) VALUES
+        <foreach collection="drafts" item="draft" separator=",">
+            (#{draft.environmentId},#{draft.id},#{draft.service},#{draft.version},#{draft.method},#{draft.name},#{draft.category},
+             #{draft.owner},#{draft.protocol},#{draft.draftRevision},#{draft.definitionJson},#{draft.dubboConnectionId},#{draft.dubboConnectionRevision},#{draft.internalClass},#{draft.internalMethod},#{draft.mcpToolEnabled})
+        </foreach>
+    </insert>
+    <update id="updateAll">
+        UPDATE catalog_api_draft SET
+        name=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.name}</foreach> END,
+        category=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.category}</foreach> END,
+        owner=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.owner}</foreach> END,
+        protocol=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.protocol}</foreach> END,
+        draft_revision=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.draftRevision}</foreach> END,
+        dubbo_connection_id=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.dubboConnectionId}</foreach> END,
+        dubbo_connection_revision=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.dubboConnectionRevision}</foreach> END,
+        internal_class=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.internalClass}</foreach> END,
+        internal_method=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.internalMethod}</foreach> END,
+        mcp_tool_enabled=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.mcpToolEnabled}</foreach> END,
+        definition_json=CASE id <foreach collection="drafts" item="d">WHEN #{d.id} THEN #{d.definitionJson}</foreach> END
+        WHERE environment_id=#{environmentId} AND (<foreach collection="drafts" item="d" separator=" OR ">
+            (id=#{d.id} AND draft_revision=#{d.draftRevision}-1)
+        </foreach>)
+    </update>
+    <update id="updateDraft">
+        UPDATE catalog_api_draft
+        SET name = #{draft.name}, category = #{draft.category}, owner = #{draft.owner},
+            protocol = #{draft.protocol}, draft_revision = #{draft.draftRevision}, definition_json = #{draft.definitionJson},
+            dubbo_connection_id = #{draft.dubboConnectionId}, dubbo_connection_revision = #{draft.dubboConnectionRevision},
+            internal_class = #{draft.internalClass}, internal_method = #{draft.internalMethod},
+            mcp_tool_enabled = #{draft.mcpToolEnabled}
+        WHERE environment_id=#{draft.environmentId} AND id = #{draft.id} AND draft_revision = #{expectedRevision}
+    </update>
+</mapper>

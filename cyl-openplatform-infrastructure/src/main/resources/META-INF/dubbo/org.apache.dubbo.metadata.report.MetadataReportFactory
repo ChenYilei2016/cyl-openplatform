@@ -1,0 +1,2 @@
+open-platform-nacos=io.github.chenyilei2016.openplatform.infrastructure.connection.runtime.ConnectionMetadataReportFactory
+open-platform-redis=io.github.chenyilei2016.openplatform.infrastructure.connection.runtime.ConnectionMetadataReportFactory

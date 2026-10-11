@@ -1,0 +1,41 @@
+/*
+ * 调用身份（BusinessIdentity）与正式调用（PublishedInvocation）的基础样式，只使用设计令牌。
+ * 门户 API 文档页“在线调试”（api-docs.css）与“我的接入”抽屉（portal-settings.css）在此基础上按各自宽度调整排布，
+ * 因此保留 public-debug-workspace / debug-credential-form / debug-person / debug-identity 等宿主可定位的类名。
+ */
+.public-debug-workspace { display: flex; flex-direction: column; gap: var(--op-space-md); min-width: 0; color: var(--op-color-text); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.public-debug-workspace > p, .identity-help > p { margin: 0; }
+.public-debug-workspace .help-text { color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); }
+.public-debug-workspace > details > summary, .debug-person > summary { color: var(--op-color-text-secondary); cursor: pointer; }
+.op-identity__mode { display: flex; flex-direction: column; gap: var(--op-space-xs); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.debug-credential-form { min-width: 0; }
+.debug-credential-form fieldset { display: flex; flex-direction: column; gap: var(--op-space-md); min-width: 0; max-width: 620px; margin: 0; padding: 0; border: 0; }
+.debug-credential-form label { display: flex; flex-direction: column; gap: var(--op-space-xs); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.debug-credential-form input[readonly] { background: var(--op-color-bg-subtle); color: var(--op-color-text-secondary); font-family: var(--op-font-code); }
+.debug-person > summary { margin-bottom: var(--op-space-sm); }
+.debug-person > p { margin-top: var(--op-space-xs); }
+.op-identity__submit { align-self: flex-start; }
+.op-identity__actions { display: flex; flex-wrap: wrap; gap: var(--op-space-sm); }
+.debug-identity { padding: var(--op-space-md) var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+.debug-identity h3 { margin: 0 0 var(--op-space-sm); color: var(--op-color-text); font-size: var(--op-font-size-sm); font-weight: 600; line-height: var(--op-line-height-sm); }
+.debug-identity dl { display: flex; flex-wrap: wrap; gap: var(--op-space-sm) var(--op-space-xl); margin: 0; }
+.debug-identity dt { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.debug-identity dd { margin: 2px 0 0; color: var(--op-color-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); overflow-wrap: anywhere; }
+.op-identity__copy { align-self: flex-start; }
+
+/* 正式调用：请求 JSON 与结果并排，窄屏上下排列。 */
+.portal-invocation { display: flex; flex-direction: column; gap: var(--op-space-sm); min-width: 0; }
+.portal-invocation h3 { margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-lg); font-weight: 600; line-height: var(--op-line-height-lg); }
+.portal-invocation .help-text, .portal-invocation > p { margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-invocation__endpoint { align-self: flex-start; max-width: 100%; padding: 2px var(--op-space-sm); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-subtle); color: var(--op-color-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); overflow-wrap: anywhere; }
+.portal-invocation-columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--op-space-xl); align-items: start; margin-top: var(--op-space-sm); }
+.portal-invocation-columns form { display: flex; flex-direction: column; gap: var(--op-space-sm); min-width: 0; }
+.portal-invocation-columns label { display: flex; flex-direction: column; gap: var(--op-space-xs); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.portal-invocation-columns textarea { font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.portal-invocation-result { display: flex; flex-direction: column; gap: var(--op-space-sm); min-width: 0; }
+.portal-invocation-result h3 { font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); }
+.portal-invocation-result pre { max-height: 400px; margin: 0; padding: var(--op-space-md) var(--op-space-lg); overflow: auto; border-radius: var(--op-radius-lg); background: var(--op-color-code-bg); color: var(--op-color-code-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.document-field-error { margin: 0; color: var(--op-color-error); font-size: var(--op-font-size-xs); }
+@media (max-width: 1100px) {
+  .portal-invocation-columns { grid-template-columns: minmax(0, 1fr); }
+}

@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.observability.dal.mapper.ManagementAuditMapper">
+    <sql id="timeAndRequest">
+        occurred_at &gt;= #{q.from} AND occurred_at &lt; #{q.to}
+        <if test="q.id != null">AND id = #{q.id}</if>
+        <if test="q.operatorTenantId != null">AND operator_tenant_id = #{q.operatorTenantId}</if>
+        <if test="q.operatorEmployeeNo != null">AND operator_employee_no = #{q.operatorEmployeeNo}</if>
+        <if test="q.requestId != null">AND request_id = #{q.requestId}</if>
+    </sql>
+    <!-- 条件直接约束来源表，不依赖优化器将派生表条件下推。 -->
+    <sql id="sources">
+        SELECT id, 'ACCESS' AS source, request_id,
+               CASE WHEN action = 'UPDATE_API_GOVERNANCE' THEN target_id ELSE NULL END AS api_id,
+               application_id, target_tenant_id AS tenant_id, target_id, action, outcome,
+               'ADMIN' AS actor_kind, operator_tenant_id, operator_employee_no,
+               NULL AS release_id, NULL AS draft_revision, occurred_at
+        FROM access_audit
+        WHERE <include refid="timeAndRequest"/>
+        <if test="q.targetId != null">AND target_id = #{q.targetId}</if>
+        <if test="!q.sources.isEmpty()">AND 'ACCESS' IN
+            <foreach collection="q.sources" item="source" open="(" separator="," close=")">#{source}</foreach>
+        </if>
+        <if test="q.apiId != null">AND action = 'UPDATE_API_GOVERNANCE' AND target_id = #{q.apiId}</if>
+        <if test="q.applicationId != null">AND application_id = #{q.applicationId}</if>
+        <if test="q.tenantId != null">AND target_tenant_id = #{q.tenantId}</if>
+        <if test="!q.outcomes.isEmpty()">AND outcome IN
+            <foreach collection="q.outcomes" item="outcome" open="(" separator="," close=")">#{outcome}</foreach>
+        </if>
+        UNION ALL
+        SELECT id, 'TOKEN', request_id, NULL, application_id, tenant_id, token_id, action, outcome,
+               actor_kind, operator_tenant_id, operator_employee_no, NULL, NULL, occurred_at
+        FROM token_audit
+        WHERE <include refid="timeAndRequest"/>
+        <if test="q.targetId != null">AND token_id = #{q.targetId}</if>
+        <if test="!q.sources.isEmpty()">AND 'TOKEN' IN
+            <foreach collection="q.sources" item="source" open="(" separator="," close=")">#{source}</foreach>
+        </if>
+        <if test="q.apiId != null">AND 1 = 0</if>
+        <if test="q.applicationId != null">AND application_id = #{q.applicationId}</if>
+        <if test="q.tenantId != null">AND tenant_id = #{q.tenantId}</if>
+        <if test="!q.outcomes.isEmpty()">AND outcome IN
+            <foreach collection="q.outcomes" item="outcome" open="(" separator="," close=")">#{outcome}</foreach>
+        </if>
+        UNION ALL
+        SELECT id, 'CATALOG', request_id, api_id, NULL, NULL, api_id, action, 'SUCCESS',
+               'ADMIN', operator_tenant_id, operator_employee_no, NULL, draft_revision, occurred_at
+        FROM catalog_audit
+        WHERE environment_id=#{environmentId} AND <include refid="timeAndRequest"/>
+        <if test="q.targetId != null">AND api_id = #{q.targetId}</if>
+        <if test="!q.sources.isEmpty()">AND 'CATALOG' IN
+            <foreach collection="q.sources" item="source" open="(" separator="," close=")">#{source}</foreach>
+        </if>
+        <if test="q.apiId != null">AND api_id = #{q.apiId}</if>
+        <if test="q.applicationId != null or q.tenantId != null">AND 1 = 0</if>
+        <if test="!q.outcomes.isEmpty()">AND 'SUCCESS' IN
+            <foreach collection="q.outcomes" item="outcome" open="(" separator="," close=")">#{outcome}</foreach>
+        </if>
+        UNION ALL
+        SELECT id, 'PUBLICATION', request_id, api_id, NULL, NULL, api_id, action, outcome,
+               'ADMIN', operator_tenant_id, operator_employee_no, release_id, NULL, occurred_at
+        FROM publication_audit
+        WHERE environment_id=#{environmentId} AND <include refid="timeAndRequest"/>
+        <if test="q.targetId != null">AND api_id = #{q.targetId}</if>
+        <if test="!q.sources.isEmpty()">AND 'PUBLICATION' IN
+            <foreach collection="q.sources" item="source" open="(" separator="," close=")">#{source}</foreach>
+        </if>
+        <if test="q.apiId != null">AND api_id = #{q.apiId}</if>
+        <if test="q.applicationId != null or q.tenantId != null">AND 1 = 0</if>
+        <if test="!q.outcomes.isEmpty()">AND outcome IN
+            <foreach collection="q.outcomes" item="outcome" open="(" separator="," close=")">#{outcome}</foreach>
+        </if>
+    </sql>
+    <select id="page" resultType="io.github.chenyilei2016.openplatform.domain.observability.ManagementAudit">
+        SELECT id, source, request_id, api_id, application_id, tenant_id, target_id, action, outcome,
+               actor_kind, operator_tenant_id, operator_employee_no, release_id, draft_revision, occurred_at
+        FROM (<include refid="sources"/>) audit_entries
+        ORDER BY occurred_at DESC, source, id DESC
+        LIMIT #{q.pageSize} OFFSET #{q.offset}
+    </select>
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM (<include refid="sources"/>) audit_entries
+    </select>
+</mapper>

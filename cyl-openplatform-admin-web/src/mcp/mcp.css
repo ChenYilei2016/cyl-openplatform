@@ -1,0 +1,10 @@
+/* 121 MCP 接入：网关凭据与租户开通页签；只使用 var(--op-*) 令牌，事实与一次性密钥复用 credentials.css。 */
+.mcp-page { display: flex; flex-direction: column; min-width: 0; }
+.mcp-gateway,
+.mcp-tools,
+.mcp-sets,
+.mcp-tenants { display: flex; flex-direction: column; gap: var(--op-space-md); min-width: 0; }
+.mcp-section__head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--op-space-md); }
+.mcp-section__intro { max-width: 720px; margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.mcp-page-controls { justify-content: flex-end; }
+.mcp-selected-tools { display: flex; flex-wrap: wrap; gap: var(--op-space-xs); }

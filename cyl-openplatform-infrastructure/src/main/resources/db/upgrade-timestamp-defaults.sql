@@ -1,0 +1,48 @@
+-- 已初始化数据库专用；先备份并确认目标库，DDL 会隐式提交，不可用事务整体回滚。
+-- 修正旧 explicit_defaults_for_timestamp=OFF 创建的隐式 NOT NULL / ON UPDATE。
+-- 仅修复两列的零日期；不修改有效业务时间，不更改全局数据库设置。
+-- 应用继续显式传入必填时间；默认值用于消除旧服务端隐式 ON UPDATE 行为。
+-- https://dev.mysql.com/doc/refman/8.0/en/timestamp-initialization.html
+SET @platform_timestamp_sql_mode = @@SESSION.sql_mode;
+SET SESSION sql_mode = TRIM(BOTH ',' FROM REPLACE(REPLACE(CONCAT(',', @@SESSION.sql_mode, ','), ',NO_ZERO_DATE,', ','), ',NO_ZERO_IN_DATE,', ','));
+
+ALTER TABLE access_audit
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE catalog_audit
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE environment_release_transfer
+    MODIFY COLUMN created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN updated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE platform_call_record
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE platform_alert_state
+    MODIFY COLUMN window_start TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN window_end TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN evaluated_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE platform_alert_event
+    MODIFY COLUMN window_start TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN window_end TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE publication_release
+    MODIFY COLUMN submitted_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN reviewed_at TIMESTAMP(6) NULL DEFAULT NULL;
+ALTER TABLE publication_audit
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE sdk_asset
+    MODIFY COLUMN created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN published_at TIMESTAMP(6) NULL DEFAULT NULL;
+ALTER TABLE platform_signing_key
+    MODIFY COLUMN created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN changed_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE platform_token
+    MODIFY COLUMN issued_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
+    MODIFY COLUMN expires_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+ALTER TABLE token_audit
+    MODIFY COLUMN occurred_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6);
+
+UPDATE publication_release SET reviewed_at = NULL
+WHERE CAST(reviewed_at AS CHAR) LIKE '0000-00-00 00:00:00%';
+UPDATE sdk_asset SET published_at = NULL
+WHERE CAST(published_at AS CHAR) LIKE '0000-00-00 00:00:00%';
+
+SET SESSION sql_mode = @platform_timestamp_sql_mode;

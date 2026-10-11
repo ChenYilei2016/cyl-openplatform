@@ -1,0 +1,33 @@
+/* 116 审核中心 · 跨环境发布：发出记录、进度详情与发送工作区，只用设计令牌。 */
+.op-transfer-notices { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.op-transfer-notices:not(:empty) { margin-bottom: var(--op-space-lg); }
+.op-transfer__label { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-xs) var(--op-space-sm); }
+.op-transfer__pending { display: flex; flex-direction: column; gap: var(--op-space-xs); margin: 0; padding: 0; list-style: none; }
+.op-transfer__pending li { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+
+.op-transfer { display: flex; flex-direction: column; gap: var(--op-space-lg); }
+.op-transfer__heading { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm) var(--op-space-md); }
+.op-transfer__heading h3 { display: inline-flex; align-items: center; gap: var(--op-space-xs); margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-lg); line-height: var(--op-line-height-lg); font-weight: 600; }
+.op-transfer__actions { display: inline-flex; flex-wrap: wrap; gap: var(--op-space-sm); margin-left: auto; }
+.op-transfer__note { margin: 0; font-size: var(--op-font-size-sm); }
+.op-transfer__fold { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-transfer__fold > summary { cursor: pointer; }
+.op-transfer__fold[open] > summary { margin-bottom: var(--op-space-md); }
+
+.op-transfer-workspace { padding: var(--op-space-xl); }
+.op-transfer-setup { display: flex; flex-direction: column; gap: var(--op-space-lg); }
+.op-transfer-setup__stage { display: flex; flex-direction: column; gap: var(--op-space-lg); }
+.op-transfer-setup__stage[hidden] { display: none; }
+.op-transfer__picker { display: flex; flex-direction: column; gap: var(--op-space-sm); min-width: 0; }
+.op-transfer__field { display: flex; flex-direction: column; gap: var(--op-space-xs); min-width: 0; }
+.op-transfer__field-error { color: var(--op-color-error); font-size: var(--op-font-size-sm); }
+.op-transfer__code textarea,
+textarea.op-transfer__code { font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.op-transfer__source { display: flex; flex-direction: column; gap: var(--op-space-xs); padding: var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-bg-subtle); overflow-wrap: anywhere; }
+.op-transfer__http { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: var(--op-space-md); }
+.op-transfer__owner { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-sm); }
+
+@media (max-width: 760px) {
+  .op-transfer-workspace { padding: var(--op-space-lg); }
+  .op-transfer__http { grid-template-columns: 1fr; }
+}

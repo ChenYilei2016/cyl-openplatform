@@ -1,0 +1,32 @@
+server:
+  address: 127.0.0.1
+  port: ${EXAMPLE_ORDER_PORT:8091}
+spring:
+  application:
+    name: example-order-provider
+example:
+  order:
+    dubbo:
+      port: ${EXAMPLE_ORDER_DUBBO_PORT:20881}
+logging:
+  level:
+    # Dubbo 异常日志可能包含原始附件及业务参数，安全调用日志另由平台治理。
+    org.apache.dubbo: 'OFF'
+    # MVC 默认校验日志会携带被拒绝的原始输入，示例服务也不记录业务正文。
+    org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver: 'OFF'
+
+open-platform:
+  provider:
+    environment-id: ${OPENAPI_PROVIDER_ENVIRONMENT_ID:local}
+    # 公钥从私有配置open-platform.provider.public-keys.<keyId>提供，不在源码写入默认密钥。
+
+# 运维就绪入口；业务入口仍由统一Provider SDK验证。
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      probes:
+        enabled: true

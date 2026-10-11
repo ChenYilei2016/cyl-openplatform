@@ -1,0 +1,162 @@
+/*
+ * API 配置子编辑器（调用目标、参数映射、请求预览、返回处理、公开示例、JSON 生成、分类与负责人、权限组）。
+ * 116：替代旧 catalog-editor.css，只使用 var(--op-*) 令牌；通用文字类只在 .op-legacy-editor 包裹内生效。
+ */
+
+/* ------------------------------- 通用（包裹内） ------------------------------- */
+.op-legacy-editor { min-width: 0; color: var(--op-color-text); font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); }
+.op-legacy-editor p { margin: var(--op-space-sm) 0; }
+.op-legacy-editor small,
+.op-legacy-editor .help-text { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.op-legacy-editor .field-label { display: inline-flex; align-items: center; gap: 2px; color: var(--op-color-text); font-size: var(--op-font-size-sm); }
+.op-legacy-editor .required-mark { color: var(--op-color-error); }
+.op-legacy-editor .error-note { color: var(--op-color-error); font-size: var(--op-font-size-sm); }
+.op-legacy-editor .success-note { color: var(--op-color-success); font-size: var(--op-font-size-sm); }
+.op-legacy-editor .row,
+.op-legacy-editor .form-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.op-legacy-editor details > summary { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+.op-legacy-editor details[open] > summary { margin-bottom: var(--op-space-sm); }
+.op-legacy-editor pre { max-height: 360px; margin: 0; overflow: auto; padding: var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-code-bg); color: var(--op-color-code-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.op-legacy-editor code { font-family: var(--op-font-code); font-size: var(--op-font-size-xs); overflow-wrap: anywhere; }
+
+/* 子编辑器外框：融入配置分区，不再画旧版卡片。 */
+.op-legacy-editor .contract-section { margin: 0; padding: 0; border: 0; background: transparent; }
+.op-legacy-editor .contract-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--op-space-md); padding: 0 0 var(--op-space-sm); }
+.op-legacy-editor .contract-heading h3 { display: inline-flex; align-items: center; gap: 4px; margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.op-legacy-editor .contract-body { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-md); padding: 0; }
+
+/* 标签在上的两列字段网格。 */
+.op-legacy-editor .contract-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-md) var(--op-space-lg); }
+.op-legacy-editor .contract-fields > label,
+.op-legacy-editor .contract-fields > div { display: flex; min-width: 0; flex-direction: column; align-items: stretch; gap: var(--op-space-xs); color: var(--op-color-text); font-size: var(--op-font-size-sm); }
+.op-legacy-editor .contract-fields > label > small { margin: 0; font-size: var(--op-font-size-xs); }
+@media (max-width: 680px) {
+  .op-legacy-editor .contract-fields { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* -------------------------------- 调用目标 -------------------------------- */
+.op-legacy-editor .http-target-location { grid-column: 1 / -1; align-items: flex-start; }
+.http-instance-state { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.http-instance-state .http-instances-available { color: var(--op-color-success); }
+.http-instance-state .http-instances-empty { color: var(--op-color-warning); }
+.http-contract-source > .contract-fields { margin-top: var(--op-space-sm); }
+.op-legacy-editor .target-verification-state { margin: 0; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.op-legacy-editor .dubbo-field-interfaceName,
+.op-legacy-editor .dubbo-field-parameterTypes { grid-column: 1 / -1; }
+.op-legacy-editor .dubbo-field-parameterTypes > button { align-self: flex-start; }
+.dubbo-signature-paste section { display: flex; flex-direction: column; gap: var(--op-space-sm); margin-top: var(--op-space-sm); }
+
+/* -------------------------------- 参数映射 -------------------------------- */
+.contract-mapping { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-md); }
+.mapping-toolbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-sm); }
+.mapping-toolbar > span { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.mapping-toolbar > .default-mapping-tools { flex: 1; min-width: 0; justify-content: flex-end; }
+.mapping-cell { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-xs); }
+.http-mapping-section { display: flex; flex-direction: column; gap: var(--op-space-sm); padding-top: var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+.http-mapping-section h3 { display: inline-flex; align-items: center; gap: var(--op-space-xs); margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.http-mapping-section h3 code { color: var(--op-color-text-tertiary); font-weight: 400; }
+.http-mapping-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.http-body-disabled,
+.http-orphan-mappings { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-md); padding: var(--op-space-sm) var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-warning-soft); color: var(--op-color-warning); font-size: var(--op-font-size-sm); }
+.http-orphan-mappings { flex-direction: column; align-items: stretch; color: var(--op-color-text); }
+.http-body-disabled > div { display: flex; gap: var(--op-space-sm); }
+
+/* ------------------------------ 最终请求预览 ------------------------------ */
+.http-request-preview { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.http-request-preview .mapping-toolbar h3 { margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.http-request-preview .mapping-toolbar > span { font-size: var(--op-font-size-xs); }
+.http-preview-target { display: block; padding: var(--op-space-sm) var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-bg-subtle); font-family: var(--op-font-code); font-size: var(--op-font-size-sm); overflow-wrap: anywhere; }
+
+/* ------------------------------ 自动补齐映射 ------------------------------ */
+.default-mapping-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.mapping-choices { display: grid; flex-basis: 100%; gap: var(--op-space-sm); padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-subtle); }
+.mapping-choice-field { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 1.3fr); align-items: center; gap: var(--op-space-lg); }
+.mapping-argument { display: grid; min-width: 0; gap: var(--op-space-xs); }
+.mapping-argument code { margin-left: var(--op-space-xs); color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-weight: 400; }
+.mapping-argument small { color: var(--op-color-text-tertiary); overflow-wrap: anywhere; }
+
+/* -------------------------------- 返回处理 -------------------------------- */
+.response-adapter .contract-body { gap: var(--op-space-md); }
+.adapter-mode-hint { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.adapter-presets > span { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.adapter-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--op-space-md) var(--op-space-lg); }
+.adapter-fields > label { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-xs); font-size: var(--op-font-size-sm); }
+.adapter-preview-toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-md); }
+.adapter-preview-toolbar > span { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.adapter-preview-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--op-space-lg); margin-top: var(--op-space-md); }
+.adapter-preview-grid > label { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-xs); font-size: var(--op-font-size-sm); }
+.response-adapter__sample { font-family: var(--op-font-code); font-size: var(--op-font-size-sm); }
+.adapter-result { min-width: 0; padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+.response-data-flow { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.response-data-flow strong { color: var(--op-color-text); }
+.response-schema-guidance { display: flex; flex-direction: column; align-items: flex-start; gap: var(--op-space-xs); padding: var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-warning-soft); color: var(--op-color-text); }
+.response-schema-guidance p { margin: 0; }
+.response-schema-guidance small { display: block; color: var(--op-color-text-secondary); }
+.response-schema-context { display: block; margin-top: var(--op-space-xs); }
+@media (max-width: 960px) {
+  .adapter-fields,
+  .adapter-preview-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* -------------------------------- 公开示例 -------------------------------- */
+.sample-editor { display: flex; flex-direction: column; gap: var(--op-space-md); }
+.sample-editor h3 { margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.sample-editor > label { display: flex; flex-direction: column; gap: var(--op-space-xs); font-size: var(--op-font-size-sm); }
+.sample-fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--op-space-sm); margin-bottom: var(--op-space-sm); }
+.sample-fields code { display: block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.public-example-json { font-family: var(--op-font-code); font-size: var(--op-font-size-sm); }
+.sample-tools { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.example-field { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--op-space-sm); }
+.example-field > label { display: flex; min-width: 180px; flex: 1; flex-direction: column; gap: var(--op-space-xs); font-size: var(--op-font-size-sm); }
+.sample-preview { display: flex; flex-direction: column; gap: var(--op-space-sm); padding: var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-success-soft); }
+.sample-preview h4 { margin: 0; font-size: var(--op-font-size-md); }
+.op-legacy-editor .dialog-actions { display: flex; justify-content: flex-end; gap: var(--op-space-sm); margin-top: var(--op-space-lg); padding-top: var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+@media (max-width: 760px) {
+  .sample-fields { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ------------------------------ 从 JSON 生成结构 ------------------------------ */
+.json-generation-options { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-lg); margin-bottom: var(--op-space-lg); }
+.json-generation-options > span { color: var(--op-color-text-secondary); }
+.json-generation-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: start; gap: var(--op-space-xl); max-height: 68vh; overflow-y: auto; }
+.json-generation-source { display: grid; gap: var(--op-space-md); }
+.json-generation-source > label,
+.generation-success-fields > label { display: grid; gap: var(--op-space-xs); }
+.json-generation-source textarea { font-family: var(--op-font-code); }
+.json-generation-source small,
+.json-generation-preview small { display: block; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.json-generation-grid .help-text,
+.json-generation-grid .inline-note { margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.json-generation-preview { min-width: 0; }
+.json-generation-preview .schema-view { margin-top: var(--op-space-md); }
+.json-generation-preview .schema-view h3 { display: none; }
+.generation-success-fields { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: var(--op-space-md); }
+.json-sample-kind { display: grid; gap: var(--op-space-sm); }
+.json-example-option { display: flex; align-items: center; gap: var(--op-space-xs); }
+@media (max-width: 900px) {
+  .json-generation-grid { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ---------------------------- 分类与负责人选择 ---------------------------- */
+.workspace-category { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: var(--op-space-xs); }
+.workspace-category > label { display: contents; }
+.workspace-category > label > .field-label { grid-row: 1; grid-column: 1; font-size: var(--op-font-size-sm); }
+.workspace-category > label > :not(.field-label) { grid-row: 2; grid-column: 1 / -1; min-width: 0; }
+.workspace-category > .workspace-category-manage { grid-row: 1; grid-column: 2; justify-self: end; }
+.workspace-owner { display: grid; min-width: 0; gap: var(--op-space-xs); }
+.workspace-owner .owner-label { display: flex; align-items: center; justify-content: space-between; min-height: var(--op-line-height-md); font-size: var(--op-font-size-sm); }
+.workspace-owner .help-text { margin: 0; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.workspace-category .required-mark,
+.workspace-owner .required-mark { color: var(--op-color-error); }
+
+/* -------------------------------- 调用权限组 -------------------------------- */
+.op-scope-field { display: flex; flex-direction: column; gap: var(--op-space-xs); }
+.op-scope-field__label { display: inline-flex; align-items: center; gap: 2px; color: var(--op-color-text); font-size: var(--op-font-size-sm); }
+.op-scope-field__selection { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); min-width: 0; }
+.op-scope-picker { display: flex; flex-direction: column; gap: var(--op-space-md); }
+.op-scope-picker__list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; border: 1px solid var(--op-color-divider); border-radius: var(--op-radius-md); }
+.op-scope-picker__item { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-sm); padding: var(--op-space-sm) var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+.op-scope-picker__item:first-child { border-top: 0; }
+.op-scope-picker__name { margin-right: var(--op-space-sm); font-weight: 500; }
+.op-scope-picker__code { color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.op-scope-picker__list:empty { display: none; }

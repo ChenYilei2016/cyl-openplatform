@@ -1,0 +1,45 @@
+/* 导入 API（116 视觉迁移）：来源资料、接口候选、差异核对与写入结果。只使用 var(--op-*) 令牌。 */
+.op-import { display: flex; max-width: 1280px; flex-direction: column; gap: var(--op-space-lg); }
+.op-import__card {
+  display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-md); padding: var(--op-space-xl) var(--op-space-xl) 0;
+  border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface);
+}
+.op-import__card:not(details) > :last-child:not(.op-action-bar) { margin-bottom: var(--op-space-xl); }
+.op-import__card > .op-action-bar { margin: 0 calc(-1 * var(--op-space-xl)); border-radius: 0 0 var(--op-radius-lg) var(--op-radius-lg); }
+.op-import__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-md); }
+.op-import__title { display: inline-flex; align-items: center; gap: var(--op-space-xs); margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-lg); font-weight: 600; line-height: var(--op-line-height-lg); }
+.op-import__row { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.op-import__toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); margin-bottom: var(--op-space-sm); font-size: var(--op-font-size-sm); }
+.op-import__code { font-family: var(--op-font-code); font-size: var(--op-font-size-sm); }
+.op-import__code-text { color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); overflow-wrap: anywhere; }
+.op-import__fieldset { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-sm); margin: 0; padding: 0; border: 0; }
+.op-import__cell { display: flex; min-width: 0; flex-direction: column; align-items: flex-start; gap: var(--op-space-xs); overflow-wrap: anywhere; }
+.op-import__list { margin: 0; padding-left: 18px; font-size: var(--op-font-size-sm); }
+.op-import__list--error,
+.op-import__error { color: var(--op-color-error); }
+.op-import__warning { color: var(--op-color-warning); font-size: var(--op-font-size-sm); }
+.op-import__back { padding-inline: 0; }
+
+/* 折叠内容（高级配置原文、来源提醒、批量补充）：真正的折叠区，不作弹层。 */
+.op-import__details > summary { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+.op-import__details[open] > summary { margin-bottom: var(--op-space-sm); }
+details.op-import__card { gap: 0; padding-bottom: var(--op-space-xl); }
+details.op-import__card > summary { color: var(--op-color-text); font-size: var(--op-font-size-md); font-weight: 600; }
+details.op-import__card[open] > summary { margin-bottom: var(--op-space-md); }
+.op-import__defaults { display: grid; grid-template-columns: 1.2fr 0.8fr 1fr 1fr auto; align-items: end; gap: var(--op-space-md); margin-top: var(--op-space-sm); }
+.op-import__field { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-xs); font-size: var(--op-font-size-sm); }
+
+/* 结果未知时的恢复区 */
+.op-import__recovery,
+.op-import__restore { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.op-import__recovery p,
+.op-import__restore p { margin: 0; }
+
+@media (max-width: 1000px) {
+  .op-import__defaults { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .op-import__card { padding: var(--op-space-lg) var(--op-space-lg) 0; }
+  .op-import__card > .op-action-bar { margin: 0 calc(-1 * var(--op-space-lg)); }
+  .op-import__defaults { grid-template-columns: minmax(0, 1fr); }
+}

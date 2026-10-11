@@ -1,0 +1,70 @@
+/* 114 Dubbo 服务连接：列表 + 抽屉；ConnectionPicker 在 API 配置页复用其中的选择与检查样式。只用设计令牌。 */
+.connection-inline { display: inline-flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-xs) var(--op-space-sm); }
+.connection-row-actions { display: inline-flex; gap: var(--op-space-xs); }
+.connection-row--selected > td { background: var(--op-color-bg-selected); }
+
+/* 抽屉 */
+.connection-drawer-body { display: flex; flex-direction: column; gap: var(--op-space-lg); }
+.connection-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-md) var(--op-space-xl); }
+.connection-note,
+.connection-hint { margin: 0; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.connection-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.connection-confirm,
+.connection-subsection { display: flex; flex-direction: column; gap: var(--op-space-md); }
+.connection-confirm { padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+.connection-confirm h3 { margin: 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.connection-subsection h4 { margin: 0; font-size: var(--op-font-size-sm); font-weight: 600; }
+.connection-wrap { white-space: pre-wrap; overflow-wrap: anywhere; }
+.connection-code { margin: 0; padding: var(--op-space-md); overflow: auto; border-radius: var(--op-radius-md); background: var(--op-color-code-bg); color: var(--op-color-code-text); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.connection-env { padding: 0 var(--op-space-xs); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-sm); color: var(--op-color-text-secondary); }
+
+/* 99 精简表单 */
+.connection-form-fields { min-width: 0; margin: 0; padding: 0; border: 0; }
+.connection-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-md) var(--op-space-lg); }
+.connection-form .connection-form-grid label { display: grid; gap: var(--op-space-xs); margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-sm); }
+.connection-form input,
+.connection-form textarea { box-sizing: border-box; width: 100%; }
+.connection-form input[type="number"] { height: var(--op-control-md); padding: 0 var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-surface); color: var(--op-color-text); font: inherit; }
+.connection-form input[type="number"]:focus-visible { outline: 2px solid var(--op-color-primary-soft); border-color: var(--op-color-primary); }
+.connection-form input[type="number"]:disabled { background: var(--op-color-bg-subtle); color: var(--op-color-text-tertiary); }
+.connection-field-wide { grid-column: 1 / -1; }
+.connection-config-block { margin-top: var(--op-space-lg); padding-top: var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+.connection-section-heading { display: flex; align-items: center; justify-content: space-between; gap: var(--op-space-sm); margin-bottom: var(--op-space-sm); }
+.connection-section-heading h3 { margin: 0 auto 0 0; font-size: var(--op-font-size-md); font-weight: 600; }
+.connection-section-heading > span { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.connection-runtime-options > summary { cursor: pointer; font-size: var(--op-font-size-md); font-weight: 500; }
+.connection-field-error { margin: var(--op-space-sm) 0; padding: var(--op-space-sm) var(--op-space-md); border-left: 3px solid var(--op-color-error); background: var(--op-color-error-soft); color: var(--op-color-error); }
+.connection-form-actions { position: sticky; bottom: 0; z-index: 2; display: flex; align-items: center; gap: var(--op-space-sm); margin-top: var(--op-space-lg); padding: var(--op-space-md) 0 0; border-top: 1px solid var(--op-color-divider); background: var(--op-color-bg-surface); }
+.connection-form-actions > span { margin-right: auto; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+
+/* 检查结果（连接抽屉与 API 配置页共用） */
+.connection-diagnostics { display: flex; flex-direction: column; gap: var(--op-space-sm); margin: var(--op-space-md) 0; }
+.connection-check-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-md); }
+.connection-check-columns > div { padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+.connection-check-columns h4 { margin: 0 0 var(--op-space-md); font-size: var(--op-font-size-sm); }
+.connection-check-columns ul { margin: 0; padding: 0; list-style: none; }
+.connection-check-columns li { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: var(--op-space-sm); margin: var(--op-space-sm) 0; font-size: var(--op-font-size-sm); }
+.connection-check-columns p { margin: var(--op-space-xs) 0 0; color: var(--op-color-text-secondary); line-height: var(--op-line-height-sm); }
+.connection-check-columns strong { font-weight: 500; }
+
+/* API 配置页的连接选择（ConnectionPicker）与签名粘贴 */
+.connection-target-picker { margin: var(--op-space-md) 0; padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+.connection-select-row { display: flex; flex-wrap: wrap; align-items: flex-end; gap: var(--op-space-sm); }
+.connection-select-field { display: grid; min-width: 0; flex: 1 1 360px; gap: var(--op-space-xs); }
+.connection-error { margin: var(--op-space-sm) 0; color: var(--op-color-error); font-size: var(--op-font-size-sm); }
+.connection-check-state { display: inline-flex; align-items: center; gap: var(--op-space-xs); color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); white-space: nowrap; }
+.connection-check-state > span { width: 6px; height: 6px; border-radius: 50%; background: currentcolor; }
+.connection-check-state.passed { color: var(--op-color-success); }
+.connection-check-state.failed { color: var(--op-color-error); }
+.connection-check-state.unavailable { color: var(--op-color-warning); }
+button.connection-help { width: 18px; min-width: 18px; height: 18px; min-height: 18px; align-self: center; padding: 0; border: 1px solid var(--op-color-border); border-radius: 50%; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.target-verification-state { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.dubbo-signature-paste { margin: var(--op-space-md) 0; padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); }
+.dubbo-signature-paste > summary { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+.dubbo-signature-paste > summary + * { margin-top: var(--op-space-md); }
+
+@media (max-width: 800px) {
+  .connection-facts,
+  .connection-form-grid,
+  .connection-check-columns { grid-template-columns: minmax(0, 1fr); }
+}

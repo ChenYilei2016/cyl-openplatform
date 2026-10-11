@@ -1,0 +1,15 @@
+/* /docs 业务 Token 阅读页：沿用门户深色顶栏（shell.css），正文浅色阅读。只使用设计令牌。 */
+.op-bearer__main { width: 100%; max-width: 1440px; margin: 0 auto; padding: var(--op-space-xl); }
+.op-bearer__heading { margin-bottom: var(--op-space-lg); }
+.op-bearer__heading h1 { margin: 0 0 var(--op-space-xs); color: var(--op-color-text); font-size: var(--op-font-size-xxl); font-weight: 600; line-height: var(--op-line-height-xxl); letter-spacing: 0; }
+.op-bearer__heading p { max-width: 720px; margin: 0; color: var(--op-color-text-secondary); }
+.op-bearer__notice { margin-bottom: var(--op-space-lg); }
+.op-bearer__form { display: flex; flex-direction: column; align-items: flex-start; gap: var(--op-space-md); max-width: 560px; padding: var(--op-space-xl); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); }
+.op-bearer__form > p { margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.op-bearer__field { display: flex; flex-direction: column; gap: var(--op-space-xs); width: 100%; color: var(--op-color-text); font-size: var(--op-font-size-sm); font-weight: 500; }
+.op-bearer__session { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: var(--op-space-sm); margin-bottom: var(--op-space-lg); padding: var(--op-space-sm) var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-bearer__key { color: var(--op-color-success); }
+@media (max-width: 760px) {
+  .op-bearer__main { padding: var(--op-space-lg); }
+  .op-bearer__form { padding: var(--op-space-lg); }
+}

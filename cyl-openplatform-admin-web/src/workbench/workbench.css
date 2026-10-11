@@ -1,0 +1,31 @@
+/* 108 工作台：只使用 var(--op-*) 令牌。 */
+.op-workbench { max-width: 1600px; }
+.op-workbench__actions { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--op-space-md); margin-bottom: var(--op-space-xl); }
+.op-workbench__action { display: flex; align-items: flex-start; gap: var(--op-space-md); padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); color: var(--op-color-text); font: inherit; text-align: left; cursor: pointer; transition: border-color .12s, background .12s; }
+.op-workbench__action:hover { border-color: var(--op-color-primary); background: var(--op-color-bg-hover); }
+.op-workbench__action:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 2px; }
+.op-workbench__action strong { display: block; font-size: var(--op-font-size-md); font-weight: 600; }
+.op-workbench__action small { display: block; margin-top: 2px; color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); }
+.op-workbench__action-icon { display: grid; flex-shrink: 0; place-items: center; width: 32px; height: 32px; border-radius: var(--op-radius-md); background: var(--op-color-primary-soft); color: var(--op-color-primary); font-size: var(--op-font-size-lg); }
+.op-workbench__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: var(--op-space-lg); align-items: start; }
+.op-workbench__panel { border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); }
+.op-workbench__panel > header { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 var(--op-space-lg); border-bottom: 1px solid var(--op-color-divider); }
+.op-workbench__panel > header h2 { margin: 0; font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); font-weight: 600; }
+.op-workbench__panel > :not(header) { padding: var(--op-space-sm); }
+.op-workbench__list { margin: 0; padding: var(--op-space-xs) 0; list-style: none; }
+.op-workbench__list button, .op-workbench__list a { display: flex; align-items: center; gap: var(--op-space-lg); width: 100%; min-height: 48px; padding: var(--op-space-xs) var(--op-space-md); border: 0; border-radius: var(--op-radius-md); background: transparent; color: inherit; font: inherit; text-align: left; text-decoration: none; cursor: pointer; }
+.op-workbench__list button:hover, .op-workbench__list a:hover { background: var(--op-color-bg-hover); }
+.op-workbench__list button:focus-visible, .op-workbench__list a:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: -2px; }
+.op-workbench__list-main { display: flex; flex: 1; flex-direction: column; min-width: 0; }
+.op-workbench__list-title { overflow: hidden; color: var(--op-color-text); font-size: var(--op-font-size-sm); font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.op-workbench__list-meta { flex-shrink: 0; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+@media (prefers-reduced-motion: reduce) { .op-workbench__action { transition: none; } }
+/* 114 近 1 小时运行：指标可点击进入日志/告警，异常时用错误色。 */
+.op-workbench__runtime { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--op-space-sm); }
+.op-workbench__stat { display: block; padding: var(--op-space-md); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.op-workbench__stat:hover { border-color: var(--op-color-primary); background: var(--op-color-bg-hover); }
+.op-workbench__stat:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 2px; }
+.op-workbench__stat.is-error { border-color: var(--op-color-error); }
+.op-workbench__stat.is-error .op-metric__value { color: var(--op-color-error); }
+.op-workbench__note { grid-column: 1 / -1; margin: 0; padding: var(--op-space-xs) var(--op-space-md); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+@media (max-width: 640px) { .op-workbench__runtime { grid-template-columns: 1fr; } }

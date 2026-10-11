@@ -1,0 +1,2 @@
+/* 门户全局基线沿用两端共用 base.css（只用设计令牌）；各页面样式随组件引入。 */
+@import "@cyl/open-platform-web-shared/styles/base.css";

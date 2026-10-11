@@ -1,0 +1,7 @@
+{
+  "format": "cyl-openplatform.sdk/v1",
+  "sdkVersion": "1.2.0",
+  "language": "JAVA",
+  "gatewayProtocol": "HTTP_JSON_BEARER_V1",
+  "runtime": "Java 8+"
+}

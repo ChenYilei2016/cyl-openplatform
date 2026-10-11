@@ -1,0 +1,9 @@
+/* 共享反馈与分页（components.tsx）：只使用 var(--op-*) 令牌。 */
+.compact-feedback { overflow-wrap: anywhere; font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.compact-feedback summary { cursor: pointer; padding: 2px 0; }
+.compact-feedback .feedback-detail { max-height: 160px; overflow: auto; white-space: pre-wrap; margin-top: var(--op-space-sm); }
+.load-feedback { display: flex; align-items: flex-start; gap: var(--op-space-sm); margin: var(--op-space-sm) 0; }
+.load-feedback > .compact-feedback { flex: 1; min-width: 0; margin: 0; }
+.load-feedback > button { flex-shrink: 0; }
+.op-load-status { margin: var(--op-space-sm) 0; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.op-pagination { display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: var(--op-space-sm); margin-top: var(--op-space-md); color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }

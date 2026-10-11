@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.mcp.dal.mapper.McpToolMapper">
+    <sql id="effective">
+        FROM publication_state s JOIN publication_release r ON r.id=s.live_release_id
+        WHERE r.environment_id=#{environmentId} AND s.environment_id=#{environmentId} AND s.enabled=TRUE AND r.mcp_tool_enabled=TRUE AND r.lifecycle_status != 'RETIRED'
+        AND EXISTS (SELECT 1 FROM publication_release_scope rs JOIN access_scope sc ON sc.code=rs.scope_code
+                    WHERE rs.release_id=r.id AND sc.enabled=TRUE)
+    </sql>
+    <sql id="membership">
+        <if test="toolSetId != null">
+            AND EXISTS (SELECT 1 FROM mcp_tool_set_member m JOIN mcp_tool_set ts ON ts.id=m.tool_set_id
+                        WHERE ts.environment_id=#{environmentId} AND m.environment_id=#{environmentId} AND m.tool_set_id=#{toolSetId} AND m.api_id=r.api_id AND ts.enabled=TRUE)
+        </if>
+    </sql>
+    <sql id="snapshot">r.id,r.api_id,r.reviewed_at,r.submitted_at,r.snapshot_json,s.state_version AS effective_state_version,s.enabled AS effective_enabled</sql>
+    <select id="listAfter" resultType="io.github.chenyilei2016.openplatform.infrastructure.publication.dal.dataobject.PublicationReleaseDO">
+        SELECT <include refid="snapshot"/> <include refid="effective"/> <include refid="membership"/>
+        <if test="afterApiId != null">AND r.api_id &gt; #{afterApiId}</if>
+        ORDER BY r.api_id LIMIT #{limit}
+    </select>
+    <select id="find" resultType="io.github.chenyilei2016.openplatform.infrastructure.publication.dal.dataobject.PublicationReleaseDO">
+        SELECT <include refid="snapshot"/> <include refid="effective"/> <include refid="membership"/>
+        AND CONCAT(r.service,'_',r.method,'_',REPLACE(REPLACE(r.version,'.','_'),'-','_'))=#{toolName}
+        LIMIT 2
+    </select>
+    <select id="availableApiIds" resultType="java.lang.String">
+        SELECT r.api_id <include refid="effective"/>
+        AND r.api_id IN <foreach collection="apiIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+    <select id="apiNames" resultType="io.github.chenyilei2016.openplatform.infrastructure.catalog.dal.dataobject.ApiDraftDO">
+        SELECT id,name FROM catalog_api_draft WHERE environment_id=#{environmentId} AND id IN
+        <foreach collection="apiIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+    </select>
+    <select id="toolSets" resultType="io.github.chenyilei2016.openplatform.domain.mcp.McpToolRepository$ToolSetRef">
+        SELECT api_id,code,name,enabled,total FROM (
+            SELECT m.api_id,t.code,t.name,t.enabled,COUNT(*) OVER(PARTITION BY m.api_id) AS total,
+                   ROW_NUMBER() OVER(PARTITION BY m.api_id ORDER BY t.name,t.id) AS membership_rank
+            FROM mcp_tool_set_member m JOIN mcp_tool_set t ON t.id=m.tool_set_id
+            WHERE t.environment_id=#{environmentId} AND m.environment_id=#{environmentId} AND m.api_id IN <foreach collection="apiIds" item="id" open="(" separator="," close=")">#{id}</foreach>
+        ) memberships WHERE membership_rank &lt;= 3 ORDER BY api_id,name,code
+    </select>
+</mapper>

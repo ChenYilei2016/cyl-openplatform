@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.github.chenyilei2016.openplatform.provider.mvc.OpenPlatformProviderAutoConfiguration

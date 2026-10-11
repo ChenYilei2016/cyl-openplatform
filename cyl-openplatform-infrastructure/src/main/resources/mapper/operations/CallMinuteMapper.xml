@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.mapper.CallMinuteMapper">
+    <insert id="increment">
+        INSERT INTO platform_call_minute
+        (bucket_start,mode,api_key,application_key,tenant_key,employee_key,identity_kind,governance_rejected,observed_requests,rule_hits,ip_denied,token_bucket_rejected,daily_quota_rejected,requests,successes,client_errors,server_errors,
+         auth_rejected,rate_limited,slow_calls,unattributed,duration_sum,max_duration)
+        VALUES (#{minute},#{record.mode},COALESCE(#{record.apiId},''),COALESCE(#{record.applicationId},''),COALESCE(#{record.tenantId},''),COALESCE(#{record.employeeId},''),#{record.identityKind},
+            <choose><when test="record.governance != null">
+                CASE WHEN #{record.governance.allowed}=false THEN 1 ELSE 0 END,
+                CASE WHEN #{record.governance.observed}=true THEN 1 ELSE 0 END,#{record.governance.violationCount},
+                CASE WHEN #{record.governance.allowed}=false AND #{record.governance.denialReason}='IP_DENIED' THEN 1 ELSE 0 END,
+                CASE WHEN #{record.governance.allowed}=false AND #{record.governance.denialReason}='TOKEN_BUCKET_LIMIT' THEN 1 ELSE 0 END,
+                CASE WHEN #{record.governance.allowed}=false AND #{record.governance.denialReason}='DAILY_QUOTA' THEN 1 ELSE 0 END,
+            </when><otherwise>0,0,0,0,0,0,</otherwise></choose>1,
+            CASE WHEN #{record.outcome}='SUCCESS' THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} BETWEEN 400 AND 499 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} BETWEEN 500 AND 599 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} IN (401,403) THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus}=429 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.durationMillis} &gt;= 1000 THEN 1 ELSE 0 END,
+            CASE WHEN COALESCE(#{record.apiId},'')='' THEN 1 ELSE 0 END,
+            #{record.durationMillis},#{record.durationMillis})
+        ON DUPLICATE KEY UPDATE governance_rejected=governance_rejected+VALUES(governance_rejected),
+            observed_requests=observed_requests+VALUES(observed_requests),rule_hits=rule_hits+VALUES(rule_hits),
+            ip_denied=ip_denied+VALUES(ip_denied),token_bucket_rejected=token_bucket_rejected+VALUES(token_bucket_rejected),
+            daily_quota_rejected=daily_quota_rejected+VALUES(daily_quota_rejected),requests=requests+1,successes=successes+VALUES(successes),
+            client_errors=client_errors+VALUES(client_errors),server_errors=server_errors+VALUES(server_errors),
+            auth_rejected=auth_rejected+VALUES(auth_rejected),rate_limited=rate_limited+VALUES(rate_limited),
+            slow_calls=slow_calls+VALUES(slow_calls),unattributed=unattributed+VALUES(unattributed),
+            duration_sum=duration_sum+VALUES(duration_sum),max_duration=GREATEST(max_duration,VALUES(max_duration))
+    </insert>
+    <insert id="incrementRules">
+        INSERT INTO platform_rule_minute
+        (rule_id,rule_version,bucket_start,mode,api_key,application_key,tenant_key,employee_key,identity_kind,governance_rejected,observed_requests,rule_hits,ip_denied,token_bucket_rejected,daily_quota_rejected,requests,successes,client_errors,server_errors,
+         auth_rejected,rate_limited,slow_calls,unattributed,duration_sum,max_duration)
+        VALUES <foreach collection="record.governance.hits" item="hit" separator=",">(#{hit.ruleId},#{hit.version},#{minute},#{record.mode},COALESCE(#{record.apiId},''),COALESCE(#{record.applicationId},''),COALESCE(#{record.tenantId},''),COALESCE(#{record.employeeId},''),#{record.identityKind},
+            CASE WHEN #{record.governance.allowed}=false AND #{hit.mode}='ENFORCE' AND #{hit.reason}!='NONE' THEN 1 ELSE 0 END,
+            CASE WHEN #{hit.mode}='OBSERVE' AND #{hit.reason}!='NONE' THEN 1 ELSE 0 END,
+            CASE WHEN #{hit.reason}!='NONE' THEN 1 ELSE 0 END,
+            CASE WHEN #{record.governance.allowed}=false AND #{hit.mode}='ENFORCE' AND #{hit.reason}='IP_DENIED' THEN 1 ELSE 0 END,
+            CASE WHEN #{record.governance.allowed}=false AND #{hit.mode}='ENFORCE' AND #{hit.reason}='TOKEN_BUCKET_LIMIT' THEN 1 ELSE 0 END,
+            CASE WHEN #{record.governance.allowed}=false AND #{hit.mode}='ENFORCE' AND #{hit.reason}='DAILY_QUOTA' THEN 1 ELSE 0 END,1,
+
+            CASE WHEN #{record.outcome}='SUCCESS' THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} BETWEEN 400 AND 499 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} BETWEEN 500 AND 599 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus} IN (401,403) THEN 1 ELSE 0 END,
+            CASE WHEN #{record.httpStatus}=429 THEN 1 ELSE 0 END,
+            CASE WHEN #{record.durationMillis} &gt;= 1000 THEN 1 ELSE 0 END,
+            CASE WHEN COALESCE(#{record.apiId},'')='' THEN 1 ELSE 0 END,
+            #{record.durationMillis},#{record.durationMillis})</foreach>
+        ON DUPLICATE KEY UPDATE governance_rejected=governance_rejected+VALUES(governance_rejected),
+            observed_requests=observed_requests+VALUES(observed_requests),rule_hits=rule_hits+VALUES(rule_hits),
+            ip_denied=ip_denied+VALUES(ip_denied),token_bucket_rejected=token_bucket_rejected+VALUES(token_bucket_rejected),
+            daily_quota_rejected=daily_quota_rejected+VALUES(daily_quota_rejected),requests=requests+1,successes=successes+VALUES(successes),
+            client_errors=client_errors+VALUES(client_errors),server_errors=server_errors+VALUES(server_errors),
+            auth_rejected=auth_rejected+VALUES(auth_rejected),rate_limited=rate_limited+VALUES(rate_limited),
+            slow_calls=slow_calls+VALUES(slow_calls),unattributed=unattributed+VALUES(unattributed),
+            duration_sum=duration_sum+VALUES(duration_sum),max_duration=GREATEST(max_duration,VALUES(max_duration))
+    </insert>
+    <sql id="totals">
+        COALESCE(SUM(governance_rejected),0) AS governance_rejected,COALESCE(SUM(observed_requests),0) AS observed_requests,
+        COALESCE(SUM(rule_hits),0) AS rule_hits,COALESCE(SUM(ip_denied),0) AS ip_denied,
+        COALESCE(SUM(token_bucket_rejected),0) AS token_bucket_rejected,COALESCE(SUM(daily_quota_rejected),0) AS daily_quota_rejected,
+        COALESCE(SUM(requests),0) AS requests,COALESCE(SUM(successes),0) AS successes,
+        COALESCE(SUM(client_errors),0) AS client_errors,COALESCE(SUM(server_errors),0) AS server_errors,
+        COALESCE(SUM(auth_rejected),0) AS auth_rejected,COALESCE(SUM(rate_limited),0) AS rate_limited,
+        COALESCE(SUM(slow_calls),0) AS slow_calls,COALESCE(SUM(unattributed),0) AS unattributed,
+        COALESCE(SUM(duration_sum),0) AS duration_sum,COALESCE(MAX(max_duration),0) AS max_duration
+    </sql>
+    <sql id="range">
+        FROM platform_call_minute WHERE bucket_start &gt;= #{from} AND bucket_start &lt; #{to} AND mode=#{mode}
+        <if test="apiId != null">AND api_key=#{apiId}</if>
+        <if test="applicationId != null">AND application_key=#{applicationId}</if>
+    </sql>
+    <select id="summary" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.CallMinuteDO">
+        SELECT <include refid="totals"/> <include refid="range"/>
+    </select>
+    <select id="points" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.CallMinuteDO">
+        SELECT grouped_bucket AS bucket_start, <include refid="totals"/>
+        FROM (SELECT FLOOR(bucket_start / CAST(#{minutes} AS DECIMAL(10,0))) * #{minutes} AS grouped_bucket,
+                governance_rejected,observed_requests,rule_hits,ip_denied,token_bucket_rejected,daily_quota_rejected,requests,successes,client_errors,server_errors,auth_rejected,rate_limited,slow_calls,
+                unattributed,duration_sum,max_duration <include refid="range"/>) buckets
+        GROUP BY grouped_bucket ORDER BY grouped_bucket
+    </select>
+    <sql id="analysisRange">
+        FROM <choose><when test="q.ruleId != null">platform_rule_minute</when><otherwise>platform_call_minute</otherwise></choose>
+        WHERE bucket_start &gt;= #{from} AND bucket_start &lt; #{to} AND mode=#{q.mode}
+        <if test="q.apiId != null">AND api_key=#{q.apiId}</if>
+        <if test="q.applicationId != null">AND application_key=#{q.applicationId}</if>
+        <if test="q.tenantId != null">AND tenant_key=#{q.tenantId}</if>
+        <if test="q.employeeId != null">AND employee_key=#{q.employeeId}</if>
+        <if test="q.identityKind != null">AND identity_kind=#{q.identityKind}</if>
+        <if test="q.ruleId != null">AND rule_id=#{q.ruleId}<if test="q.ruleVersion != null"> AND rule_version=#{q.ruleVersion}</if></if>
+    </sql>
+    <select id="analysisSummary" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.CallMinuteDO">
+        SELECT <include refid="totals"/> <include refid="analysisRange"/>
+    </select>
+    <select id="analysisPoints" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.CallMinuteDO">
+        SELECT grouped_bucket AS bucket_start,<include refid="totals"/>
+        FROM (SELECT FLOOR(bucket_start / CAST(#{q.bucket.minutes} AS DECIMAL(10,0))) * #{q.bucket.minutes} AS grouped_bucket,
+            governance_rejected,observed_requests,rule_hits,ip_denied,token_bucket_rejected,daily_quota_rejected,
+            requests,successes,client_errors,server_errors,auth_rejected,rate_limited,slow_calls,unattributed,duration_sum,max_duration
+            <include refid="analysisRange"/>) buckets
+        GROUP BY grouped_bucket ORDER BY grouped_bucket
+    </select>
+    <select id="rankings" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.StatisticsRankDO">
+        SELECT r.*, COALESCE(p.display_name,c.name) AS name,p.employee_no,p.tenant_name
+        FROM (
+            SELECT <choose>
+                <when test="q.dimension.name() == 'PERSON'">tenant_key AS tenant_id,employee_key AS employee_id,identity_kind,'' AS api_id,</when>
+                <when test="q.dimension.name() == 'API'">'' AS tenant_id,'' AS employee_id,'UNKNOWN' AS identity_kind,api_key AS api_id,</when>
+                <otherwise>tenant_key AS tenant_id,'' AS employee_id,'UNKNOWN' AS identity_kind,'' AS api_id,</otherwise>
+            </choose>
+            <include refid="totals"/> <include refid="analysisRange"/>
+            GROUP BY <choose><when test="q.dimension.name() == 'PERSON'">tenant_key,employee_key,identity_kind</when><when test="q.dimension.name() == 'API'">api_key</when><otherwise>tenant_key</otherwise></choose>
+            <if test="q.sort.name() == 'RULE_HITS'">HAVING SUM(rule_hits) > 0</if>
+            ORDER BY <choose><when test="q.sort.name() == 'FAILURES'">(SUM(requests)-SUM(successes))</when><when test="q.sort.name() == 'REJECTIONS'">SUM(governance_rejected)</when><when test="q.sort.name() == 'RULE_HITS'">SUM(rule_hits)</when><otherwise>SUM(requests)</otherwise></choose> DESC,
+                <choose><when test="q.dimension.name() == 'PERSON'">tenant_key,employee_key,identity_kind</when><when test="q.dimension.name() == 'API'">api_key</when><otherwise>tenant_key</otherwise></choose>
+            LIMIT #{q.top}
+        ) r LEFT JOIN access_employee_profile p ON p.tenant_id=r.tenant_id AND p.employee_id=r.employee_id AND r.identity_kind='EMPLOYEE'
+            LEFT JOIN catalog_api_draft c ON c.id=r.api_id
+        ORDER BY <choose><when test="q.sort.name() == 'FAILURES'">(r.requests-r.successes)</when><when test="q.sort.name() == 'REJECTIONS'">r.governance_rejected</when><when test="q.sort.name() == 'RULE_HITS'">r.rule_hits</when><otherwise>r.requests</otherwise></choose> DESC,r.tenant_id,r.employee_id,r.api_id
+    </select>
+    <select id="ruleOverview" resultType="io.github.chenyilei2016.openplatform.infrastructure.operations.metrics.dal.dataobject.RuleOverviewDO">
+        SELECT rule_id,rule_version,<include refid="totals"/> FROM platform_rule_minute
+        WHERE bucket_start &gt;= #{from} AND bucket_start &lt; #{to} AND mode=#{mode}
+            AND rule_id IN <foreach collection="ids" item="id" open="(" close=")" separator=",">#{id}</foreach>
+        GROUP BY rule_id,rule_version
+    </select>
+</mapper>

@@ -1,0 +1,1 @@
+org.springframework.boot.EnvironmentPostProcessor=io.github.chenyilei2016.openplatform.testing.ProviderProofTestEnvironment

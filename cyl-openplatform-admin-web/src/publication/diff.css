@@ -1,0 +1,33 @@
+/* 发布差异：按业务分组的三列表；审核、发布、版本比较与跨环境预览共用，只用设计令牌。 */
+.publication-diff { display: flex; flex-direction: column; gap: var(--op-space-md); overflow: auto; }
+.publication-diff .diff-intro,
+.publication-diff .response-schema-guidance { margin: 0; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.publication-diff .response-schema-guidance { padding: var(--op-space-sm) var(--op-space-md); border-radius: var(--op-radius-md); background: var(--op-color-warning-soft); color: var(--op-color-text); }
+.publication-diff .empty { margin: 0; padding: var(--op-space-xxl) var(--op-space-lg); color: var(--op-color-text-tertiary); text-align: center; }
+.publication-diff .diff-group { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.publication-diff .diff-group h3 { margin: 0; color: var(--op-color-text); font-size: var(--op-font-size-md); font-weight: 600; }
+.publication-diff .table-wrap { border: 1px solid var(--op-color-border); border-radius: var(--op-radius-md); overflow: hidden; }
+.publication-diff table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: var(--op-font-size-sm); }
+.publication-diff th,
+.publication-diff td { padding: var(--op-space-sm) var(--op-space-md); border-bottom: 1px solid var(--op-color-divider); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+.publication-diff tbody tr:last-child td { border-bottom: 0; }
+.publication-diff th { background: var(--op-color-bg-subtle); color: var(--op-color-text-secondary); font-weight: 500; }
+.publication-diff th:first-child,
+.publication-diff td:first-child { width: 24%; }
+.publication-diff td strong { font-weight: 500; }
+.publication-diff td small { display: block; margin-top: 2px; color: var(--op-color-text-tertiary); font-size: var(--op-font-size-xs); }
+.publication-diff .code { max-height: 280px; margin: 0; padding: var(--op-space-sm); overflow: auto; border-radius: var(--op-radius-sm); background: var(--op-color-bg-subtle); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); line-height: var(--op-line-height-xs); white-space: pre-wrap; overflow-wrap: anywhere; }
+.publication-diff .muted { color: var(--op-color-text-tertiary); }
+.publication-diff .scope-changes { margin: 0; padding: 0; list-style: none; }
+.publication-diff .scope-changes li + li { margin-top: var(--op-space-sm); }
+.publication-diff .scope-changes code { display: block; margin-top: 2px; color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.publication-diff .tag { display: inline-block; margin-right: var(--op-space-xs); padding: 0 6px; border-radius: var(--op-radius-sm); background: var(--op-color-success-soft); color: var(--op-color-success); font-size: var(--op-font-size-xs); }
+.publication-diff .tag.bad { background: var(--op-color-error-soft); color: var(--op-color-error); }
+.publication-diff .diff-explanation { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.publication-diff .diff-explanation p { margin: 0 0 var(--op-space-xs); }
+.publication-diff .diff-paths { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.publication-diff .diff-paths > summary { cursor: pointer; }
+.publication-diff .diff-paths code { font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+@media (max-width: 760px) {
+  .publication-diff table { min-width: 600px; }
+}

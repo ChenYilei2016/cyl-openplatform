@@ -1,0 +1,37 @@
+/* 114 调用日志与管理审计：只使用 var(--op-*) 令牌，不覆盖 antd 内部类名。 */
+
+/* 单行单元格：内容不折行，超出省略，保证约 36px 行高。 */
+.observation-cell-line { display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.observation-time-link { padding: 0; border: 0; background: transparent; color: var(--op-color-text); font: inherit; font-variant-numeric: tabular-nums; white-space: nowrap; cursor: pointer; }
+.observation-time-link:hover { color: var(--op-color-primary); }
+.observation-time-link:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 2px; border-radius: var(--op-radius-sm); }
+.observation-mode-tag { margin-left: var(--op-space-xs); padding: 0 var(--op-space-xs); border-radius: var(--op-radius-sm); background: var(--op-color-bg-subtle); color: var(--op-color-text-secondary); font-size: var(--op-font-size-xs); }
+.observation-duration { font-variant-numeric: tabular-nums; }
+.observation-duration.is-slow { color: var(--op-color-warning); }
+.observation-pre { white-space: pre-line; }
+
+/* 失败行左侧红色细条；当前打开详情的行用主色细条。 */
+.observation-row--failure > td:first-child { box-shadow: inset 3px 0 0 var(--op-color-error); }
+.observation-row--selected > td:first-child { box-shadow: inset 3px 0 0 var(--op-color-primary); }
+
+/* 更多筛选 */
+.observation-range-inputs { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: var(--op-space-sm); }
+.observation-more-hint { margin: 0; font-size: var(--op-font-size-sm); }
+
+/* 详情抽屉：结论先行 */
+.observation-conclusion { display: flex; flex-direction: column; gap: var(--op-space-sm); padding: var(--op-space-lg); border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-subtle); }
+.observation-conclusion__headline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm) var(--op-space-lg); font-size: var(--op-font-size-md); }
+.observation-conclusion__headline > .op-status { font-size: var(--op-font-size-md); font-weight: 600; }
+.observation-reason { margin: 0; color: var(--op-color-text); line-height: var(--op-line-height-md); }
+.observation-inline { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); }
+.observation-detail-section { padding-top: var(--op-space-xl); }
+.observation-detail-section h3 { margin: 0 0 var(--op-space-md); color: var(--op-color-text); font-size: var(--op-font-size-md); line-height: var(--op-line-height-md); font-weight: 600; }
+.observation-detail-section > p { margin: 0 0 var(--op-space-sm); }
+.observation-operation { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); font-family: var(--op-font-code); font-size: var(--op-font-size-sm); }
+.observation-named { display: inline-flex; flex-wrap: wrap; align-items: baseline; gap: var(--op-space-sm); }
+.observation-id { font-family: var(--op-font-code); font-size: var(--op-font-size-sm); overflow-wrap: anywhere; }
+.observation-muted { color: var(--op-color-text-tertiary); }
+.observation-help { color: var(--op-color-text-tertiary); }
+.observation-link-start { align-self: flex-start; padding-inline: 0; }
+.observation-detail-footer { display: flex; align-items: center; justify-content: flex-end; gap: var(--op-space-sm); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.observation-detail-footer > span { margin-right: auto; }

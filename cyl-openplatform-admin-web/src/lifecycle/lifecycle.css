@@ -1,0 +1,12 @@
+/* 维护声明表单（112b），只用设计令牌。 */
+.op-lifecycle-fields { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-lg); margin: 0; padding: 0; border: 0; }
+.op-lifecycle-fields__item { display: flex; min-width: 0; flex-direction: column; gap: var(--op-space-xs); margin: 0; }
+.op-lifecycle-fields__item--wide { grid-column: 1 / -1; }
+.op-lifecycle-fields__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--op-space-lg); }
+.op-lifecycle-fields__hint { color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+.op-lifecycle-fields__error { color: var(--op-color-error); font-size: var(--op-font-size-sm); }
+.op-lifecycle-fields__compat { padding-top: var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+.op-lifecycle-fields__compat > summary { margin-bottom: var(--op-space-md); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); cursor: pointer; }
+@media (max-width: 900px) {
+  .op-lifecycle-fields__grid { grid-template-columns: 1fr; }
+}

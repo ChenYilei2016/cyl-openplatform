@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="io.github.chenyilei2016.openplatform.infrastructure.operations.alerts.dal.mapper.OperationsAlertMapper">
+    <insert id="saveStates">
+        INSERT INTO platform_alert_state(metric,status,metric_value,sample_count,window_start,window_end,policy_version,evaluated_at) VALUES
+        <foreach collection="states" item="s" separator=",">
+            (#{s.metric},#{s.status},#{s.value},#{s.sampleCount},#{s.windowStart},#{s.windowEnd},#{s.policyVersion},#{s.evaluatedAt})
+        </foreach>
+        ON DUPLICATE KEY UPDATE status=VALUES(status),metric_value=VALUES(metric_value),sample_count=VALUES(sample_count),
+            window_start=VALUES(window_start),window_end=VALUES(window_end),policy_version=VALUES(policy_version),evaluated_at=VALUES(evaluated_at)
+    </insert>
+    <insert id="insertEvents">
+        INSERT INTO platform_alert_event(id,metric,previous_status,status,metric_value,sample_count,window_start,window_end,policy_version,occurred_at) VALUES
+        <foreach collection="events" item="e" separator=",">
+            (#{e.id},#{e.metric},#{e.previousStatus},#{e.status},#{e.value},#{e.sampleCount},#{e.windowStart},#{e.windowEnd},#{e.policyVersion},#{e.occurredAt})
+        </foreach>
+    </insert>
+    <delete id="deleteEvents">
+        DELETE FROM platform_alert_event WHERE id IN
+        <foreach collection="ids" item="id" open="(" close=")" separator=",">#{id}</foreach>
+    </delete>
+</mapper>

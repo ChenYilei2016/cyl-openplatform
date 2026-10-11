@@ -1,0 +1,83 @@
+/* 110 新建入口与快速创建：只使用 var(--op-*) 令牌。 */
+
+/* ------------------------------ 来源面板 ------------------------------ */
+.op-new-api__title { display: inline-flex; align-items: center; gap: var(--op-space-xs); }
+.op-new-api__body { display: flex; flex-direction: column; gap: var(--op-space-xl); padding-top: var(--op-space-sm); }
+.op-new-api__group { margin: 0 0 var(--op-space-sm); color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); font-weight: 500; line-height: var(--op-line-height-sm); }
+.op-source-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: var(--op-space-sm); }
+.op-source-card {
+  display: flex; align-items: flex-start; gap: var(--op-space-md); min-height: 76px; padding: var(--op-space-md);
+  border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface);
+  color: var(--op-color-text); font: inherit; text-align: left; cursor: pointer;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
+}
+.op-source-card:hover { border-color: var(--op-color-primary); background: var(--op-color-primary-soft); }
+.op-source-card:focus-visible { outline: 2px solid var(--op-color-primary); outline-offset: 2px; }
+.op-source-card__icon {
+  display: inline-flex; flex: none; align-items: center; justify-content: center; width: 32px; height: 32px;
+  border-radius: var(--op-radius-md); background: var(--op-color-primary-soft); color: var(--op-color-primary); font-size: var(--op-font-size-lg);
+}
+.op-source-card__text { display: flex; min-width: 0; flex-direction: column; gap: 2px; }
+.op-source-card__title { font-size: var(--op-font-size-md); font-weight: 600; line-height: var(--op-line-height-md); }
+.op-source-card__hint { color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.op-new-api__example { display: flex; align-items: center; gap: var(--op-space-xs); margin: 0; padding-top: var(--op-space-md); border-top: 1px solid var(--op-color-divider); color: var(--op-color-text-tertiary); font-size: var(--op-font-size-sm); }
+
+.op-copy-picker { display: flex; flex-direction: column; gap: var(--op-space-md); padding-top: var(--op-space-sm); }
+.op-copy-picker__list { display: flex; flex-direction: column; max-height: 440px; overflow-y: auto; margin: 0; padding: 0; list-style: none; border: 1px solid var(--op-color-divider); border-radius: var(--op-radius-md); }
+.op-copy-picker__item { display: flex; align-items: center; justify-content: space-between; gap: var(--op-space-md); padding: var(--op-space-sm) var(--op-space-md); border-top: 1px solid var(--op-color-divider); }
+.op-copy-picker__item:first-child { border-top: 0; }
+.op-copy-picker__item:hover { background: var(--op-color-bg-hover); }
+.op-copy-picker__main { display: flex; min-width: 0; flex-direction: column; }
+.op-copy-picker__name { overflow: hidden; color: var(--op-color-text); font-weight: 500; white-space: nowrap; text-overflow: ellipsis; }
+.op-copy-picker__code { overflow: hidden; color: var(--op-color-text-tertiary); font-family: var(--op-font-code); font-size: var(--op-font-size-xs); white-space: nowrap; text-overflow: ellipsis; }
+
+/* ------------------------------ 快速创建 ------------------------------ */
+.op-quick-create { max-width: 1120px; }
+.op-quick-create__form { padding: var(--op-space-xl) var(--op-space-xl) 0; border: 1px solid var(--op-color-border); border-radius: var(--op-radius-lg); background: var(--op-color-bg-surface); }
+.op-quick-create__form .op-action-bar { margin: 0 calc(-1 * var(--op-space-xl)); border-radius: 0 0 var(--op-radius-lg) var(--op-radius-lg); }
+.op-quick-create__restored { margin-bottom: var(--op-space-lg); }
+.op-quick-create__label { display: inline-flex; align-items: center; gap: 4px; }
+.op-quick-create__detected { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px; color: var(--op-color-text-secondary); }
+.op-quick-create__detected > .anticon { color: var(--op-color-success); }
+.op-quick-create__detected code { font-family: var(--op-font-code); font-size: var(--op-font-size-xs); }
+.op-quick-create__warning { margin: 0; color: var(--op-color-warning); font-size: var(--op-font-size-sm); }
+.op-quick-create__inline-error { margin: calc(-1 * var(--op-space-md)) 0 0; color: var(--op-color-error); font-size: var(--op-font-size-sm); }
+.op-quick-create__toggle { align-self: flex-start; padding-inline: 0; }
+.op-quick-create__curl { display: flex; flex-direction: column; gap: var(--op-space-sm); }
+.op-quick-create__curl-box { display: flex; flex-direction: column; gap: var(--op-space-sm); padding: var(--op-space-md); border: 1px dashed var(--op-color-border); border-radius: var(--op-radius-md); background: var(--op-color-bg-subtle); }
+.op-quick-create__address {
+  display: flex; align-items: center; gap: var(--op-space-sm); padding: var(--op-space-sm) var(--op-space-md);
+  border-radius: var(--op-radius-md); background: var(--op-color-code-bg); color: var(--op-color-code-text);
+}
+.op-quick-create__address-label { flex: none; color: var(--op-color-text-secondary); font-size: var(--op-font-size-sm); }
+.op-quick-create__address code { min-width: 0; overflow: hidden; font-family: var(--op-font-code); font-size: var(--op-font-size-sm); white-space: nowrap; text-overflow: ellipsis; }
+.op-quick-create__notes {
+  display: flex; gap: var(--op-space-sm); padding: var(--op-space-md); border-radius: var(--op-radius-md);
+  background: var(--op-color-primary-soft); color: var(--op-color-text); font-size: var(--op-font-size-sm);
+}
+.op-quick-create__notes > .anticon { margin-top: 3px; color: var(--op-color-primary); }
+.op-quick-create__issues { margin: var(--op-space-xs) 0 0; padding-left: 18px; }
+.op-quick-create__issues li + li { margin-top: 2px; }
+.op-quick-create .op-form-section__body > * { min-width: 0; margin-bottom: 0; }
+.op-quick-create__parsed {
+  display: flex; flex-wrap: wrap; align-items: baseline; gap: var(--op-space-xs) var(--op-space-sm); padding: var(--op-space-sm) var(--op-space-md);
+  border-radius: var(--op-radius-md); background: var(--op-color-success-soft); color: var(--op-color-text); font-size: var(--op-font-size-sm);
+}
+.op-quick-create__parsed > .anticon { color: var(--op-color-success); }
+.op-quick-create__parsed details { flex-basis: 100%; color: var(--op-color-text-secondary); }
+.op-quick-create__parsed summary { width: max-content; color: var(--op-color-primary); cursor: pointer; }
+/* 复用的连接选择器去掉旧版外框，与表单其他字段对齐。 */
+.op-quick-create .connection-target-picker { margin: 0; padding: 0; border: 0; background: transparent; }
+
+/* ------------------------------ 复制为新 API ------------------------------ */
+.op-copy-dialog { display: flex; flex-direction: column; gap: var(--op-space-md); padding-top: var(--op-space-sm); }
+.op-copy-dialog p { margin: 0; font-size: var(--op-font-size-sm); line-height: var(--op-line-height-sm); }
+.op-copy-dialog__note { color: var(--op-color-text-secondary); }
+.op-copy-dialog__fields { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0 var(--op-space-md); }
+.op-copy-dialog__name { grid-column: 1 / -1; }
+.op-copy-dialog__path { display: flex; flex-wrap: wrap; align-items: center; gap: var(--op-space-sm); font-size: var(--op-font-size-sm); }
+.op-copy-dialog__path code { padding: var(--op-space-xs) var(--op-space-sm); border-radius: var(--op-radius-sm); background: var(--op-color-bg-subtle); font-family: var(--op-font-code); overflow-wrap: anywhere; }
+.op-copy-dialog__warnings { margin: 0; padding-left: 18px; }
+@media (max-width: 700px) {
+  .op-copy-dialog__fields { grid-template-columns: minmax(0, 1fr); }
+}
