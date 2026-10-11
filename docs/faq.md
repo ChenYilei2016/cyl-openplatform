@@ -4,6 +4,14 @@
 
 ## 安装与启动
 
+### GitHub 上找不到 `.local`、私有配置或初始化 SQL？
+
+初始化 SQL 已公开在 [sql/init.sql](../sql/init.sql)，下载仓库后即可导入，Compose 也直接挂载它。`.env` 与 `config/local/private` 由你运行 `python3 scripts/setup-local.py` 后生成；`.local` 中的 Provider 配置、演示凭据和运行记录由对应运行脚本生成，首次使用不需要这个目录。不要索取或复制别人的私有文件。
+
+### 库是空的，演示数据在哪里？
+
+建表 SQL 只创建结构及初始管理员资格。启动后按 [第一个 API](first-api.md)运行公开演示脚本，它通过正式接口创建 API、发布、授权和凭据，并请求真实订单 Provider；[API JSON](../examples/first-api/order-query.json)可在 GitHub 直接查看。
+
 ### `invalid target release: 25` 或 Maven 使用了旧 Java
 
 `java -version`和`mvn -version`都要确认。Maven可能使用另一个JAVA_HOME；设置JDK25并重新打开终端，不要仅修改pom的release数字。
@@ -22,7 +30,7 @@
 
 ### MySQL Access denied / 表不存在
 
-检查私有配置中的地址、数据库名、用户、密码与实际数据库一致。全新Compose卷才运行初始化SQL；已有卷不会再次执行。`spring.sql.init.mode=never`，Java启动不负责补表。区分“用户密码不匹配”和“SQL没有导入”。
+检查私有配置中的地址、数据库名、用户、密码与实际数据库一致。全新Compose卷才运行初始化SQL；已有卷不会再次执行。`spring.sql.init.mode=never`，Java启动不负责补表。区分“用户密码不匹配”和“SQL没有导入”。[SQL 指南](../sql/README.md)提供检查命令；早期版本只建了 43 张表，遗漏 `catalog_api_copy_request`，已有库按该指南补这一张表，不能重复导入整份初始化 SQL。
 
 ### 健康检查503或业务提示依赖不可用
 

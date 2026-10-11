@@ -23,6 +23,17 @@ sequenceDiagram
 
 管理员浏览器登录只用于配置平台；程序调用使用AppKey/AppSecret换取Token，两者不能替代。
 
+## 示例材料在哪里
+
+| 随仓库提供 | 用途 |
+| --- | --- |
+| [订单 API JSON](../examples/first-api/order-query.json) | 入参、出参、HTTP 绑定及身份映射；owner 是待替换的档案 ID，占位处理由脚本完成 |
+| [演示初始化脚本](../scripts/demo/first-api.py) | 创建权限、分类、API、发布和应用凭据，并验证一次调用 |
+| [订单 Provider 源码](../examples/order-provider) | 独立 Java 服务，内置虚构订单；无需另找业务数据库或导入订单 SQL |
+| [Provider 启动脚本](../scripts/run-example-provider.sh) | 使用你初始化时生成的公钥启动示例服务 |
+
+演示数据通过正常接口创建，不在 SQL 中预置 AppSecret 或发布快照。`.local/state/demo/first-api.json` 是脚本执行后写到**你电脑**的结果与凭据，不是要从 GitHub 下载的输入文件。
+
 ## 前提
 
 1. 已按 [快速开始](quickstart.md) 启动平台，健康检查为UP。
@@ -44,7 +55,7 @@ bash scripts/run-example-provider.sh
 curl -f http://127.0.0.1:8091/actuator/health
 ```
 
-第三个终端运行：
+第三个终端先进入同一仓库根目录，再运行：
 
 ```bash
 python3 scripts/demo/first-api.py
@@ -81,6 +92,10 @@ python3 scripts/demo/first-api.py --check
 ```
 
 `--check`复用演示凭据申请/复用Token并调用；可能新增Token及调用审计记录。服务停止后请先重新启动平台与Provider。
+
+### 在页面中查看结果
+
+打开 <http://127.0.0.1:18080/admin/>，在“API列表”搜索 `demo_orders` 或“查询示例订单”，查看草稿配置和已生效发布；在“接入凭据”查看新应用，在“调用日志”查看订单查询记录。打开 <http://127.0.0.1:18080/portal/> 并登录同一账号，即可查看已展示的接口文档。若修改过平台端口，使用实际端口。
 
 ## 方式二：按页面理解和复现
 

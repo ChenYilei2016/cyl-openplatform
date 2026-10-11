@@ -8,11 +8,6 @@ import secrets
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[1]
-SCHEMAS = (
-    "access", "mcp", "catalog", "dubbo-connection", "token", "publication", "governance",
-    "observability", "operations-metrics", "environment-release-transfer", "environment-release-receipt",
-    "sdk-asset", "operations-alert", "signature", "administrator",
-)
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
@@ -20,8 +15,10 @@ def main():
     args = parser.parse_args()
     private = ROOT / "config/local/private/application.properties"
     env = ROOT / ".env"
-    sql = ROOT / ".local/init/01-platform.sql"
-    for path in (private, env, sql):
+    public = private.parent / "provider-public.pem"
+    if not (ROOT / "sql/init.sql").is_file():
+        parser.error("仓库缺少sql/init.sql，请获取完整源码")
+    for path in (private, env, public):
         if path.exists():
             parser.error(f"已有文件 {path.relative_to(ROOT)}，为保留现有账号与数据，本工具不覆盖")
     password = args.password_file.read_text().rstrip("\r\n") if args.password_file else getpass.getpass("初始 admin 密码（至少12字符）：")
@@ -56,23 +53,15 @@ open-platform.accounts.users[0].enabled=true
     content = "\n".join(line if line.startswith("#") else "".join(
         character if ord(character) < 128 else "\\u%04x" % ord(character)
         for character in line) for line in content.split("\n"))
-    schema_root = ROOT / "cyl-openplatform-infrastructure/src/main/resources/db"
-    schema = "\n".join((schema_root / f"{name}-schema.sql").read_text() for name in SCHEMAS)
-    schema += """
--- 仅用于全新独立数据库的首位管理员，不适用于现有数据库升级。
-INSERT INTO platform_administrator (id,tenant_id,user_id,employee_id,employee_no,display_name,enabled,super_administrator,revision)
-VALUES ('local-admin','local','local-admin','local-admin','admin','管理员',true,true,1);
-"""
-    for permission in ("MANAGE_APPLICATIONS", "MANAGE_APIS", "MANAGE_CONNECTIONS", "PUBLISH_APIS", "REVIEW_APIS", "MANAGE_OPERATIONS", "VIEW_AUDIT"):
-        schema += f"INSERT INTO platform_administrator_permission VALUES ('local-admin','{permission}');\n"
-    for path, value in ((private, content), (env, f"MYSQL_PASSWORD={db_password}\nMYSQL_ROOT_PASSWORD={root_password}\n"), (sql, schema)):
+    for path, value in ((private, content), (env, f"MYSQL_PASSWORD={db_password}\nMYSQL_ROOT_PASSWORD={root_password}\n"), (public, public_key)):
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("x") as output:
             output.write(value)
-    (private.parent / "provider-public.pem").write_text(public_key)
-    print("已生成本机配置、独立数据库初始化SQL与Provider公钥。")
-    print("下一步：docker compose up -d，然后 bash scripts/build.sh 和 bash scripts/run-local.sh")
-    print("账号：admin；密码为刚才输入的值。数据库端口13306，Redis端口16379。")
+    print("已生成本机配置与Provider公钥；公开建表脚本在 sql/init.sql。")
+    print("下一步：docker compose up -d --wait，然后 bash scripts/build.sh 和 bash scripts/run-local.sh")
+    print("登录账号：admin；密码是你刚才提供的值，脚本不保存明文，只保存摘要。")
+    print("账号配置：config/local/private/application.properties")
+    print("数据库密码：.env（不是后台登录密码）。MySQL端口13306，Redis端口16379。")
 
 if __name__ == "__main__":
     main()

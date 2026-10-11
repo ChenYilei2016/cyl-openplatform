@@ -2,7 +2,9 @@
 
 [文档首页](README.md) / 快速开始 → [第一个 API](first-api.md)
 
-目标：从全新源码启动平台、登录后台并确认依赖正常。此时数据库没有演示API，空列表是正常状态。
+目标：仅凭 GitHub 下载的源码，启动你自己的平台、登录后台并确认依赖正常。无需维护者的 `.local`、私有配置或数据库。初始库只有结构和管理员资格，API 列表为空；[下一步演示](first-api.md)会创建可调用的订单 API。
+
+GitHub 不运行后端、数据库或 Provider。本指南让它们在你的电脑运行，便于入门；服务器部署见 [运维指南](operations.md)。
 
 ## 1. 检查环境
 
@@ -28,16 +30,37 @@ cd cyl-openplatform
 python3 scripts/setup-local.py
 ```
 
-**此后所有命令默认从仓库根目录执行。** 输入12至256字符的初始管理员密码并确认；终端不回显密码。脚本生成：
+**此后所有命令默认从仓库根目录执行，新开的终端也要先进入该目录。** 输入12至256字符的初始管理员密码并确认；终端不回显密码。
+
+### 仓库文件与本机生成文件
+
+下面这些文件**已经随 GitHub 源码提供**，点击即可阅读；用户不需要自行补文件：
+
+| 文件 | 用途 |
+| --- | --- |
+| [sql/init.sql](../sql/init.sql) | 全新 MySQL 空库初始化，44 张表及首位管理员资格 |
+| [sql/bootstrap-admin.sql](../sql/bootstrap-admin.sql) | 管理员种子来源；已合入 init.sql，无需重复执行 |
+| [配置模板](../config/local/application.example.properties) | 查看完整的最小外部配置字段；使用 setup 时无需另行复制 |
+| [compose.yaml](../compose.yaml) | 创建数据库/用户、自动挂载公开 SQL，启动 MySQL/Redis |
+| [订单 API 配置](../examples/first-api/order-query.json)、[演示脚本](../scripts/demo/first-api.py) | 完成后续真实 API 发布与调用 |
+
+`setup-local.py` 只生成**属于你这个安装实例**的配置，不连接数据库，也不生成建表 SQL：
 
 | 文件 | 用途 | 是否进入Git |
 | --- | --- | --- |
 | `config/local/private/application.properties` | 数据库密码、本地账号摘要、Provider私钥 | 否 |
 | `config/local/private/provider-public.pem` | 提供方信任公钥 | 否 |
 | `.env` | Compose所需的MySQL密码 | 否 |
-| `.local/init/01-platform.sql` | 全新数据库建表与首位管理员 | 否 |
 
 脚本不会连接数据库。已有配置时会拒绝覆盖，这是保护既有账号和数据；继续使用现有配置即可，不要为通过初始化而删除文件。非交互方式支持 `--password-file /path/to/password.txt`，文件由使用者提供并妥善保管。
+
+### 管理员密码在哪里
+
+- 登录用户名是 `admin`，租户是 `local`，密码就是上面由你输入的值；没有 `admin/admin` 之类的默认密码。
+- 明文不会被脚本保存。`config/local/private/application.properties` 中的 `open-platform.accounts.users[0].password-hash` 是摘要，不能拿它直接登录或还原密码。
+- `.env` 中的 `MYSQL_PASSWORD` / `MYSQL_ROOT_PASSWORD` 是数据库密码，**不是后台登录密码**。
+- SQL 只保存管理员资格，不保存登录密码。账号身份与种子授权按 `local` / `local-admin` / `admin` 对应；第一次启动先保持默认身份。
+- 忘记密码：执行 `python3 scripts/password-hash.py`，将输出摘要替换上述 `password-hash` 的值，再重启平台；详见 [账号维护](operations.md#2-账号维护)。
 
 ## 3. 启动依赖
 
@@ -55,7 +78,7 @@ docker compose ps
 | MySQL 8.4 | `127.0.0.1:13306` | 3306 |
 | Redis 7.4 | `127.0.0.1:16379` | 6379 |
 
-数据库名 `cyl_openplatform`、应用数据库用户 `cyl`。初始化SQL仅在**空数据卷首次初始化**时执行。已有卷不会因重启重新导入SQL，修改 `.env` 也不会自动修改已有MySQL用户的密码。
+数据库名 `cyl_openplatform`、应用数据库用户 `cyl`。Compose 直接挂载 [sql/init.sql](../sql/init.sql)，仅在**空数据卷首次初始化**时执行。已有卷不会因重启重新导入SQL，修改 `.env` 也不会自动修改已有MySQL用户的密码。
 
 ## 4. 构建并运行
 
@@ -86,14 +109,9 @@ curl -f http://127.0.0.1:18080/actuator/health
 
 ## 不使用 Docker
 
-可使用独立 MySQL 8.4 和 Redis；创建空库与专用用户，授予本库必要权限，导入 `.local/init/01-platform.sql`，然后修改私有配置。不要导入到已有业务库。
+前两步仍需执行，以生成登录配置和 Provider 密钥。自行安装 MySQL 8.4 / Redis，按 [数据库初始化指南](../sql/README.md#手动初始化)创建空库和专用用户，再导入仓库里的 `sql/init.sql`。修改私有配置中的数据库地址、账号、密码和 Redis 地址/端口；生成的 `.env` 仅供 Compose 使用，不会自动配置你已有的数据库。
 
-```bash
-# 用你自己的数据库账号交互输入密码，不把密码写在命令行。
-mysql --host=127.0.0.1 --port=3306 --user=YOUR_DB_USER --password   --default-character-set=utf8mb4 cyl_openplatform < .local/init/01-platform.sql
-```
-
-数据库和用户必须提前创建；上述命令只导入表与初始授权。首次建库采用utf8mb4字符集。当前已实际验收独立本机MySQL/Redis；Compose与不同操作系统验证状态见 [项目状态](status.md)。
+完成后接第 4 步构建、启动。当前已实际验收独立 MySQL/Redis；Compose 与各操作系统的验证范围见 [项目状态](status.md)。
 
 ## 启动成功后
 

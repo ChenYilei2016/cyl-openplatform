@@ -54,10 +54,22 @@ Provider使用可执行classifier为`exec`的JAR；普通JAR保留给测试/契�
 
 SDK暂未发布Maven Central，本地消费者先`install`。Java客户端样例在 [examples/java-client](../examples/java-client)，它与Provider SDK用途不同。
 
+## 数据库结构维护
+
+分模块 Schema 位于 [infrastructure/resources/db](../cyl-openplatform-infrastructure/src/main/resources/db)，管理员种子位于 [sql/bootstrap-admin.sql](../sql/bootstrap-admin.sql)。修改当前结构后执行：
+
+```bash
+python3 scripts/export-init-sql.py
+python3 scripts/export-init-sql.py --check
+python3 -m unittest discover -s scripts/tests -p 'test_*.py'
+```
+
+生成的 `sql/init.sql` 必须随源码一起提交。完整性检查核对所有当前 Schema、持久化代码引用的表和生成内容，已纳入布局检查与 CI；它不代替真实 MySQL 导入。已有库升级另行给出明确迁移，不自动执行全部 `upgrade-*.sql`。
+
 ## 文档与截图
 
 - README只保留产品定位、关键能力、快速入口与代表截图；详细参数只在 [配置参考](configuration.md)维护。
-- 新用户路径要给出执行目录、前提、写入范围、预期结果和失败恢复方式。
+- 新用户路径要给出执行目录、前提、写入范围、预期结果和失败恢复方式。以 Git 跟踪的文件为交付边界，安装输入必须随仓库提供；引用本机生成文件时说明生成命令和用途，不能依赖维护者工作目录已有文件。
 - 公开截图只用独立演示数据，录制方式见 [图片来源](images/README.md)。禁止用公司资源、真实客户数据或凭据截图。
 - 布局检查覆盖Java包路径、Markdown相对文件链接、Python/Bash/XML/JSON语法；它不能代替命令实跑、页面检查或语义核对。
 

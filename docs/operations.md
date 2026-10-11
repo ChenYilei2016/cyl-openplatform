@@ -61,7 +61,7 @@ python3 scripts/password-hash.py
 
 ## 3. 首位管理员与锁定恢复
 
-全新库由`setup-local.py`生成SQL建立首位总管理员，生产进程不会自动提权。如果已有库没有可用总管理员：
+全新库导入仓库中的 [sql/init.sql](../sql/init.sql) 建立首位总管理员（种子来源：[bootstrap-admin.sql](../sql/bootstrap-admin.sql)）；`setup-local.py`只生成对应的本地认证配置，生产进程不会自动提权。如果已有库没有可用总管理员：
 
 1. 先核对账号目录中的租户、用户ID、员工ID、工号、enabled和人员状态。
 2. 在备份后由授权DBA检查`platform_administrator`及`platform_administrator_permission`中的对应资格，确认是身份不一致还是授权被停用。
@@ -96,7 +96,7 @@ Redis保存治理计数、签名防重放与幂等协调状态；不要把随意
 
 当前为开发版，没有稳定跨版本自动迁移承诺。升级前阅读 [CHANGELOG](../CHANGELOG.md)、核对版本对应的Schema变更、备份数据与配置，在隔离环境回放升级并验证登录/发布/调用。
 
-`spring.sql.init.mode=never`，启动不会自动执行数据库升级。`src/main/resources/db/upgrade-*.sql`是各历史结构演进脚本，不是“把所有文件顺序执行”的通用升级器。全新安装由setup脚本从当前Schema生成初始化SQL；已有库应基于实际表结构制定明确迁移清单。
+`spring.sql.init.mode=never`，启动不会自动执行数据库升级。`src/main/resources/db/upgrade-*.sql`是各历史结构演进脚本，不是“把所有文件顺序执行”的通用升级器。全新安装使用已提交的 [sql/init.sql](../sql/init.sql)；已有库应基于实际表结构制定明确迁移清单。早期初始化遗漏 API 复制记录表的修复见 [SQL 指南](../sql/README.md#早期安装缺少-api-复制记录表)。
 
 回退JAR前确认数据库结构仍兼容，DDL已改变时单独处理恢复方案。先回退代码并不能保证数据状态也恢复。
 

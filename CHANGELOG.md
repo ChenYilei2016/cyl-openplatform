@@ -9,8 +9,16 @@
 - API工作区、发布、租户授权、Token、门户、治理及Provider SDK等既有能力。
 - 独立初始化脚本、MySQL/Redis Compose和CI定义。
 
+### 初始化修复
+
+- 新增公开的 `sql/init.sql`，Compose 直接挂载；安装不再依赖未提交的 `.local/init`。
+- 补入遗漏的 `catalog_api_copy_request` 表，提供旧库单表修复说明。
+- 增加 Schema 清单、持久化表引用与公开 SQL 同步检查，以及初始化脚本回归。
+
 ### 入门与文档
 
+- 重排 GitHub 首页：技术徽标、带说明的截图、折叠预览、直接可达的 SQL / 密码 / Demo 入口。
+- 区分公开安装材料与使用者生成文件，补齐手动建库、密码重置、Demo 结果和重复运行说明。
 - README、文档导航、安装、首个API、使用、配置、调用、运维、开发、SPI/SDK与排障手册。
 - 真实演示截图、可运行订单Provider脚本和首个API示例。
 - 修复公共Boot Parent下Provider重复repackage导致的错误Start-Class。

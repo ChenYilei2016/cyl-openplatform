@@ -34,8 +34,14 @@ Content-Type: application/json
 ### 2. 调用已发布API
 
 ```bash
-# TOKEN来自上一步；以下订单调用的输入只有orderNo。
-curl -X POST 'http://127.0.0.1:18080/api/oauth/demo_orders/v1/query'   -H 'Content-Type: application/json'   -H "Authorization: Bearer $TOKEN"   --data-binary '{"orderNo":"COMMON-001"}'
+# Bash 中粘贴上一步 data.accessToken 的值，输入不回显。
+read -r -s -p 'Token: ' TOKEN
+# 以下订单调用的输入只有 orderNo。
+curl -X POST 'http://127.0.0.1:18080/api/oauth/demo_orders/v1/query' \
+  -H 'Content-Type: application/json' \
+  -H "Authorization: Bearer $TOKEN" \
+  --data-binary '{"orderNo":"COMMON-001"}'
+unset TOKEN
 ```
 
 ```json

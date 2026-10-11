@@ -21,3 +21,4 @@ jobs:
       - run: pnpm run build:web
       - run: mvn -s config/build/maven-settings.xml -B package
       - run: python3 scripts/maintenance/check-layout.py --syntax
+      - run: python3 -m unittest discover -s scripts/tests -p 'test_*.py'

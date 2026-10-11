@@ -33,7 +33,9 @@ def main():
                 if package and not str(path.parent).endswith(package[1].replace('.', '/')):
                     failures.append(f'{rel}: 包名与目录不一致')
             if path.suffix == '.md':
-                for link in re.findall(r'\]\(([^)]+)\)', text):
+                links = re.findall(r'\]\(([^)]+)\)', text)
+                links += re.findall(r'(?:href|src)=["\']([^"\']+)["\']', text)
+                for link in links:
                     target = link.split('#', 1)[0]
                     if not target or re.match(r'[\w+.-]+:', target):
                         continue
@@ -50,6 +52,10 @@ def main():
                     json.loads(text)
         except Exception as error:
             failures.append(f'{rel}: {type(error).__name__}: {error}')
+    sql_check = subprocess.run([sys.executable, str(ROOT / 'scripts/export-init-sql.py'), '--check'],
+                               capture_output=True, text=True)
+    if sql_check.returncode:
+        failures.append(sql_check.stderr.strip() or sql_check.stdout.strip())
     if failures:
         print('\n'.join(failures))
         return 1

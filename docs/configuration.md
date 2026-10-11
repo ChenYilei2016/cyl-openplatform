@@ -6,6 +6,8 @@
 
 ## 1. 文件与优先级
 
+GitHub 提供 [完整最小配置模板](../config/local/application.example.properties) 和 [初始化工具](../scripts/setup-local.py)。下文“私有文件”指部署者运行工具后在自己环境生成的文件，不是仓库漏传的配置。数据库结构与管理员种子独立公开在 [sql/](../sql/README.md)。
+
 - 公共默认值：server的`application.properties`，不放真实凭据。
 - 默认外部文件：`config/local/private/application.properties`；`OPEN_PLATFORM_CONFIG`可改为另一个文件，包括`.yaml`。
 - `scripts/setup-local.py`生成的私有文件显式配置了MySQL 13306、Redis 16379、账号和RSA密钥，因此这些值优先于公共文件里的默认连接值。
