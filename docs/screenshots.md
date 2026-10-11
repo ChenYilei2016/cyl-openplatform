@@ -36,9 +36,53 @@
 
 ### 出参映射（响应处理）
 
-“响应处理”决定如何提取业务数据、哪些字段对外公开。订单示例选择“直接使用业务对象”，公开 `orderNo`、`tenantId`、`amount`、`status`；底部展示业务 data 样例，统一响应外壳由平台提供。
+“从 Response 提取”先判断提供方业务状态，再取出业务数据，最后按公开结构生成统一响应。
 
-![出参处理、公开字段与响应示例](images/api-response-mapping.jpg)
+| 规则 | 本图示例 |
+| --- | --- |
+| 成功字段路径 | `errCode` |
+| 成功值 | `["0"]`，字符串 `"0"` 与数字 `0` 不同 |
+| 业务数据路径 | `data` |
+| 失败消息路径 | `errMessage`，仅供管理诊断 |
+
+截图由维护者提供，展示工作区未保存的编辑态；“用返回样例验证规则”尚未展开。入门订单 Provider 本身直接返回业务对象，仍使用 DIRECT 配置；下面带外壳的 JSON 专门用于演示 ENVELOPE 规则，不是修改其真实返回。
+
+![Response 成功条件、data 提取与公开字段](images/api-response-mapping.png)
+
+#### 提供方返回与最终响应对照
+
+在“用返回样例验证规则（无需调用）”中粘贴以下 JSON，再点击“预览返回处理”：
+
+```json
+{
+  "errCode": "0",
+  "errMessage": "成功",
+  "data": {
+    "orderNo": "COMMON-001",
+    "tenantId": "local",
+    "amount": 101.25,
+    "status": "PAID"
+  }
+}
+```
+
+规则校验通过后，“公开响应”展示如下结果（`requestId` 每次生成，下方使用占位值）：
+
+```json
+{
+  "code": 200,
+  "resultMsg": "成功",
+  "data": {
+    "orderNo": "COMMON-001",
+    "tenantId": "local",
+    "amount": 101.25,
+    "status": "PAID"
+  },
+  "requestId": "本次预览请求号"
+}
+```
+
+“提取后 data”只包含内层订单对象；`errCode` / `errMessage` 不会照搬为公开字段。上述输入输出已通过平台的响应预览接口验证。预览不调用 Provider，也不保存或发布当前草稿。
 
 
 ## 开发者门户

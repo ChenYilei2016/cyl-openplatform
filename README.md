@@ -34,9 +34,9 @@
 
 #### 出参映射：定义客户最终收到的数据
 
-在“响应处理”中选择直接使用业务对象或从 Response 提取数据，并声明公开字段、类型和样例。下图使用订单示例的直接返回方式，展示四个公开字段和业务响应示例。
+选择“从 Response 提取”，以字符串 `errCode = "0"` 判断业务成功，从 `data` 提取业务对象，失败消息取自 `errMessage`。平台再按公开响应结构输出统一结果；[查看提供方样例与最终响应对照](docs/screenshots.md#出参映射响应处理)。下图展示未保存的规则示例，入门订单 Provider 仍采用直接返回模式。
 
-![API 工作区：出参处理、公开字段与响应示例](docs/images/api-response-mapping.jpg)
+![API 工作区：Response 成功条件、data 提取与公开字段](docs/images/api-response-mapping.png)
 
 
 <details>

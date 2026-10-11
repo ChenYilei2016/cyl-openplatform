@@ -1,6 +1,6 @@
 # 公开截图来源与更新
 
-本目录只收录README和手册引用的真实产品截图。日期：2026-10-11；版本：本仓0.1.0-SNAPSHOT本地构建。截取工具返回JPEG原始字节，因此使用`.jpg`扩展名，没有重绘界面或编辑截图内容。
+本目录只收录README和手册引用的真实产品截图。日期：2026-10-11；版本：本仓0.1.0-SNAPSHOT本地构建。浏览器截取的 JPEG 使用 `.jpg`；维护者提供的出参映射 PNG 保留原格式，没有重绘界面或编辑截图内容。
 
 ## 数据来源
 
@@ -19,12 +19,12 @@
 | [api-list.jpg](api-list.jpg) | “API列表”，示例已发布且门户展示开启 |
 | [api-workspace.jpg](api-workspace.jpg) | 示例行“编辑”，配置页顶部 |
 | [api-request-mapping.jpg](api-request-mapping.jpg) | 工作区“调用目标与映射”，展示 BODY 两条规则并展开“最终请求预览” |
-| [api-response-mapping.jpg](api-response-mapping.jpg) | 工作区“响应处理”，直接返回模式、四个公开字段与业务响应样例 |
+| [api-response-mapping.png](api-response-mapping.png) | 维护者提供的工作区截图；“从 Response 提取”，成功条件 `errCode` / `["0"]`、业务路径 `data` 与失败消息路径 `errMessage` |
 | [portal-home.jpg](portal-home.jpg) | 同账号访问`/portal/` |
 | [portal-document.jpg](portal-document.jpg) | 门户“查看文档”→查询示例订单 |
 | [call-logs.jpg](call-logs.jpg) | 后台“调用日志”，展示真实调用结果 |
 
-补充映射截图直接截取浏览器当前视口，保留原始 JPEG；请求预览的 `sample-tenant` 是界面自带样例占位。出参图使用既有 r2 配置；截图过程中以公开订单样例执行了“预览返回处理”，规则校验通过，没有保存或发布新修订。两图均已检查无密码、AppSecret、Token、私钥或公司环境地址。
+补充映射截图直接截取浏览器当前视口，保留原始 JPEG；请求预览的 `sample-tenant` 是界面自带样例占位。出参图由维护者提供，保留原始 PNG，展示基于 r2 的未保存编辑态。截图内返回预览未展开；配套样例与最终响应对照见 [截图导览](../screenshots.md#出参映射响应处理)，已通过正式响应预览接口验证，没有保存或发布修订。两图均已检查无密码、AppSecret、Token、私钥或公司环境地址。
 
 ## 更新规则
 
