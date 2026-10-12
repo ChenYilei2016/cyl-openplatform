@@ -26,6 +26,11 @@
 
 ![API 工作区：字段、目标映射与发布基线](docs/images/api-workspace.jpg)
 
+
+#### 对外契约: 对外展示什么参数
+![img.png](docs/images/api-open-arg.png)
+
+
 #### 入参映射：把请求字段与可信身份交给业务服务
 
 `orderNo` 取自客户请求，`tenantId` 取自平台验证的身份，再组装为 Provider 的 JSON 正文。右侧可预览最终请求；预览中的 `sample-tenant` 是样例占位，不是真实调用身份。
@@ -42,14 +47,12 @@ DUBBO
 ![API 工作区：Response 成功条件、data 提取与公开字段](docs/images/api-response-mapping.png)
 
 
-<details>
 <summary><strong>开发者门户：查看契约、调用示例与在线调试</strong></summary>
 
 发布后的接口按可见范围展示，接入方可以查看字段、请求示例和调试入口；文档可见性与调用授权独立。
 
 ![开发者门户：订单接口文档](docs/images/portal-document.jpg)
 
-</details>
 
 <details>
 <summary><strong>运行追踪：从一次调用定位到请求记录</strong></summary>
